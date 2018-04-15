@@ -1,0 +1,156 @@
+<%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%
+String path = request.getContextPath();
+String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<%@include file="../common/header.jsp"%>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
+<html>
+<head>
+		<meta charset="utf-8">
+		<title>订单管理</title>
+		<link rel="stylesheet" type="text/css" href="${ctx }/css/style.css" />
+		<script src="${ctx }/media/js/jquery/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="${ctx }/media/js/bootstrap/js/bootstrap.min.js"></script>
+		<script src="${ctx }/media/js/jquery-bootpag/jquery.bootpag.js"></script>
+	</head>
+	<script type="text/javascript">
+		$(function(){
+			$('.loading').fadeOut();
+			$('.page').bootpag({
+				total : "${page.totalPageCount}",
+				page : "${page.pageNow}",
+				maxVisible : 5,
+				leaps: true,
+				prev : '上一页',
+				next : '下一页'
+			});
+			$('.page').bootpag().on('page', function(event, num) {
+				toPage(num);
+			});
+		})
+		function toPage(num) {
+			$('.loading').fadeIn();
+			window.location.href = "${ctx}/Activity/orderManage.action?pn="+num;
+		}
+</script>
+<body>
+		<div class="container">
+			<div class="tab">
+				<table>
+					<tr>
+						<th><input type="checkbox" class="check-all" /></th>
+						<th></th>
+						<th>订单号</th>
+						<th>买家</th>
+						<th>卖家</th>
+						<th>商品名称</th>
+						<th>收货人</th>
+						<th>联系电话</th>
+						<th>收货地址</th>
+						<th>单价</th>
+						<th>数量</th>
+						<th>运费</th>
+						<th>合计</th>
+						<th>生产时间</th>
+						<th>买家留言</th>
+					</tr>
+					<tbody id="orderManage">
+					</tbody>
+				</table>
+			</div>
+			<footer>
+				<div class="btnlist">
+					<input class="delete" type="button" value="删除" style="display: none;"/>
+				</div>
+			</footer>
+		</div>
+ <div class="Bomb_box">
+			<div class="model">
+				<button class="close" onclick="fun2()">X</button>
+				<h2>买家留言</h2>
+				<div id="box">
+					规划局规划风格化的广泛大锅饭的jfk干净后果脚后跟脚后跟脚后跟脚后跟脚后跟经过脚后跟脚后跟脚后跟合金钢就会更加符合国家和国家宏观
+				</div>
+			</div>
+</div> 
+<script type="text/javascript">
+			var c;//回调数组 
+			var i;
+			var j;
+			var check_cmId;
+			/* $(".check-all").click(function() {
+				if(this.checked) {
+					$(":checkbox").prop("checked", true);
+				} else {
+					$(":checkbox").prop("checked", false);
+				}
+			}) */
+			function fun1(message){
+				$(".Bomb_box").show();
+				var html = $("#box").html(message);
+			}
+			function fun2(){
+				$(".Bomb_box").hide()
+			}
+			 $(function(){
+					$.ajax({
+						url:"${ctx}/wzd/Order/getOrder.action",
+						type:"post",
+						data:{"auId":1},
+						success:function(data){
+						 	console.log(data);
+						 	var html=$("#orderManage").html("");
+							c=data.data;
+						    
+							for(i=0;i<c.length;i++){
+								var td="<tr>"
+									td+="<td><input type='checkbox'/></td>";
+									td+="<td>"+i+"</td>";
+								    td+="<td id='check_comoId'>"+c[i].comoId+"</td>";
+									td+="<td>"+c[i].address.userName+"</td>";
+									td+="<td>"+c[i].creator[0].nickname+"</td>";
+									td+="<td>";
+									for(j=0;j<c[i].comodityOrderItem.length;j++){
+										td+=c[i].comodityOrderItem[j].commodity[0].cm_name+"<br>";
+										check_cmId=c[i].comodityOrderItem[j].cmId;
+									}
+									td+="</td>";
+									td+="<td>"+c[i].address.userName+"</td>";
+									td+="<td>"+c[i].address.userMobile+"</td>";
+									td+="<td>"+c[i].address.province+c[i].address.detail+"</td>";
+									td+="<td>";
+									for(j=0;j<c[i].comodityOrderItem.length;j++){
+										td+=c[i].comodityOrderItem[j].commodity[0].cm_price+"<br>";
+									}
+									td+="</td>";
+									td+="<td>";
+									for(j=0;j<c[i].comodityOrderItem.length;j++){
+										td+=c[i].comodityOrderItem[j].counts+"<br>";
+									}
+									td+="</td>";
+									td+="<td>运费</td>";
+									td+="<td>";
+									for(j=0;j<c[i].comodityOrderItem.length;j++){
+										td+=c[i].comodityOrderItem[j].price+"<br>";
+									}
+									td+="</td>";
+									td+="<td>"+c[i].createTime+"</td>";
+									td+="<td><span class='buyer' onclick=\"fun1(\'"+c[i].leave_message+"\')\">买家留言</span></td>";
+									td+="</tr>"
+								    html.append(td);
+							 }
+						},
+						dataType:"json",
+						error: function(msg){
+							alert("哎呀网络开小差了，稍等会吧！");
+							console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+						},
+						async:false
+					})
+				})
+		</script>
+	</body>
+
+</html>

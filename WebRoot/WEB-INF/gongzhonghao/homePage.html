@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<title>主页</title>
+	</head>
+	<body>
+		<nav class="homeNav padding05">
+			<a><span class="fontBig">金管家</span></a>
+			<div class=" padding05 radius2">
+				<input id="key" type="text" placeholder="请输入搜索关键词" />
+				<img src="../img/home_nav_search@2x.png"  onclick="sousuo()" class="littlePic fr"/>
+			</div>
+			<a href="../commodity/selectCommodity.do"><img src="../img/icon_user_msg@2x.png" class="littlePic fr margin05" /></a>
+		</nav>
+		<article class="slideBox">
+			<ul class="slideList">
+				<li><img src="../img/img_banner1@2x.png" /></li>
+				<li><img src="../img/img_home_bytc@2x.png" /></li>
+				<li><img src="../img/img_detal@2x.png" /></li>
+			</ul>
+		</article>
+		<p class="headline"><span></span>
+			<font></font>
+		</p>
+		<section class="banner">
+			<a href="../commodity/selectCommodity.do">
+				<img src="../img/icon_home_sc.png" /> 商城
+			</a>
+			<a href="../targetGongZhongHao/install.do">
+				<img src="../img/icon_home_az.png" /> 安装
+			</a>
+			<a href="../targetGongZhongHao/maintain.do">
+				<img src="../img/icon_home_by.png" /> 保养
+			</a>
+			<a href="../targetGongZhongHao/repair.do">
+				<img src="../img/icon_home_wx.png" /> 维修
+			</a>
+		</section>
+		<div id="typeFour"><!--  -->
+		<figure class="discounts" >
+			<figcaption></figcaption>
+			<a href=""><img src="../img/img_sp@2x.png" /></a>
+			<a href=""><img src="../img/img_yanshou@2x.png" /></a>
+		</figure>
+		</div>
+		<div id="brand">
+		<figure class="brand">
+			<figcaption></figcaption>
+			<a><span>美的</span><img src="../img/img_home_md@2x.png" onclick="meidi()"/></a>
+			<a><span>格力</span><img src="../img/img_sp@2x.png" onclick="geli()"/></a>
+			<a><span>大金</span><img src="../img/img_yanshou@2x.png" onclick="dajin()"/></a>
+			<a><span>奥克斯</span><img src="../img/img_yanshou@2x.png" onclick="aokesi()"/></a> 
+		</figure>
+		</div>
+		<figure class="hotSell">
+			<figcaption><a href="">更多</a></figcaption>
+			
+			<!--<a href=""><img src="img/img_home_md@2x.png" />
+				<center class="padding05">首付交了手机费的历史</center>
+				<center class="redFont">￥199</center>
+			</a>-->
+		</figure>
+		<footer class="footer">
+			<a href="">
+				<img src="../img/icon_home@2x.png" /> 主页
+			</a>
+			<a class="classify">
+				<img src="../img/icon_fenlei@2x.png" /> 分类
+			</a>
+			
+			<a href="../CommodityOrderController/findAllMyOrder_hompage.do">
+				<img src="../img/icon_orders@2x.png"/>
+				订单
+			</a>
+			<a href="../userController/targetPersonHome.do">
+				<img src="../img/icon_user@2x.png"/>
+				我的	
+			</a>
+		
+		</footer>
+		<div class="menu">
+			<ul>
+				<li><a href="../commodity/targetContralAirConditionShop.do">中央空调</a></li>
+				<li><a href="../commodity/selectCommodity.do">普通空调</a></li>
+			</ul>
+		</div>
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			const URL = 'http://www.kongtiaoguanjia.com/air/lc/sysdata/getSystemNotice.do';
+			//			var xhr = new XMLHttpRequest();
+			//			xhr.open('POST', URL, true);
+			//			xhr.send();
+			//			xhr.onreadystatechange = function(data) {
+			//				console.log("readyState:" + xhr.readyState + "   status:" + xhr.status);
+			//				if(xhr.readyState == 4 && xhr.status == 200) {
+			//					console.log("Request successful!");
+			//					var headline=document.querySelector('.headline font');
+			//					headline.innerHTML=data.object[0];
+			//				} 
+			//
+			//			};
+			//							xhr.timeout = 3000;
+			//							xhr.ontimeout = function(event) {
+			//								alert('time out!');
+			//							}
+
+			$.ajax({							/*系统公告*/
+				type: 'post',
+				url: URL,
+				dataType: 'json',
+				async: true,
+				success: function(data) {
+					console.log("Request successful!");
+					$('.headline font').html(data.object[0]);
+
+				},
+				error: function() {
+					alert("哎呀网络开小差了，稍等会吧！");
+					console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+				}
+			})
+
+			const URL2 = 'http://www.kongtiaoguanjia.com/air/commodity/selectHotCommodity.do';
+			function getJson() {				/*热销的四个商品*/
+				$.ajax({
+					type: "post",
+					url: URL2,
+					async: true,
+					dataType: "json",
+					data:{},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '';
+						for(var i = 0, item; item = data.object[i++];) {
+							str += `
+							<a href="../commodity/selectCommodityBycIdAndTarget.do?c_id=${item.c_id}"><img src="http://www.kongtiaoguanjia.com/${item.cover_picture}" />
+								<center class="padding05">${item.c_name}</center>
+								<center class="redFont">￥${item.price}</center>
+							</a>
+							`;
+						}
+						$('.hotSell').append(str);
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+			getJson();
+	
+			var bodyW = document.body.clientWidth,
+				slideList = document.querySelector('.slideList'),
+				slideItems = document.querySelectorAll('.slideList li'),
+				slideImg = slideItems[0].querySelector('img');
+			for(var slideItem of slideItems) {
+				slideItem.style.width = bodyW + 'px';
+			}
+			slideList.style.width += bodyW * (slideItems.length + 1) + 'px';
+
+			var i = 0; //			开始轮播
+			var clone = $('.slideList li').first().clone();
+			$('.slideList').append(clone);
+			var timer = setInterval(function() {
+				toLeft()
+			}, 2000)
+
+			function toLeft() {
+				i++
+				if(i == slideItems.length + 1) {
+					slideList.style.left = 0;
+					i = 1;
+				}
+				$(slideList).stop().animate({
+					left: -i * bodyW
+				}, 1000)
+			}
+
+			function toRight() {
+				i--;
+				if(i == -1) {
+					slideList.style.left = -(slideItems.length) * bodyW;
+					i = slideList.length - 1;
+				}
+				$(slideList).animate({
+					left: -i * bodyW
+				}, 1000)
+			}
+
+			$(".slideList").on("touchstart", function(e) {　　　　
+				//				e.preventDefault();　　　　
+				clearInterval(timer);
+				startX = e.originalEvent.changedTouches[0].pageX, 　　startY = e.originalEvent.changedTouches[0].pageY;　　
+			});　　
+			$(".slideList").on("touchend", function(e) {　　　　
+				//				e.preventDefault();　　　　
+				moveEndX = e.originalEvent.changedTouches[0].pageX, 　　　　
+					moveEndY = e.originalEvent.changedTouches[0].pageY, 　　　　
+					X = moveEndX - startX, 　　　　
+					Y = moveEndY - startY;
+
+				　　　　
+				if(Math.abs(X) > Math.abs(Y) && X < 0) {　　　　　　 /*左滑*/
+					timer = setInterval(function() {
+						toLeft();
+					}, 2000)
+				}　　　　
+				else if(Math.abs(X) > Math.abs(Y) && X > 0) {　　　　　　 /*右滑*/ 　
+					timer = setInterval(function() {
+						toLeft();
+					}, 2000)
+				}　　　　　
+			});
+		</script>
+	</body>
+
+</html>
+<script type="text/javascript">
+function sousuo(){
+	var keyword= $("#key").val();
+	window.location.href="../CommonController/selectGoodsByKeyWords.do?keyword="+keyword;
+}
+function meidi(){
+	var keyword="美的";
+	window.location.href="../CommonController/selectGoodsByKeyWords.do?keyword="+keyword;
+}
+function geli(){
+	var keyword="格力";
+	window.location.href="../CommonController/selectGoodsByKeyWords.do?keyword="+keyword;
+}
+function dajin(){
+	var keyword="大金";
+	window.location.href="../CommonController/selectGoodsByKeyWords.do?keyword="+keyword;
+}
+function aokesi(){
+	var keyword="奥克斯";
+	window.location.href="../CommonController/selectGoodsByKeyWords.do?keyword="+keyword;
+}
+
+$(function(){
+	$.ajax({     //获取优惠活动商品
+		type: "post",
+		url: "../commodity/getCommodityActivity.do",
+		async: false,
+		dataType: "json",
+		data: {"commodity_mark":1},
+		success: function(data){
+			 var html=$("#typeFour").html("");
+			var img="<figure class='discounts' >";
+				img+="<figcaption></figcaption>";
+				img+="<a href='../commodity/selectCommodityBycIdAndTarget.do?c_id="+data[0].c_id+"'><img src='http://www.kongtiaoguanjia.com/"+data[0].cover_picture+"' /></a>";
+				img+="<a href='../commodity/selectCommodityBycIdAndTarget.do?c_id="+data[0].c_id+"'><img src='http://www.kongtiaoguanjia.com/"+data[1].cover_picture+"' /></a>";
+				img+="</figure>";
+				html.append(img);
+		},
+		error: function() {
+			alert("哎呀网络开小差了，稍等会吧！");
+			console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+		}
+	});
+	
+	$.ajax({     //获取品牌活动商品
+		type: "post",
+		url: "../commodity/getCommodityActivity.do",
+		async: true,
+		dataType: "json",
+		data: {"commodity_mark":4},
+		success: function(data){
+			console.log(data);
+			var html2=$("#brand").html("");
+		 	var brand_img="<figure class='brand'>";
+		 	brand_img+="<figcaption></figcaption>";
+		 	brand_img+="<a href='../commodity/selectCommodityBycIdAndTarget.do?c_id="+data[0].c_id+"'><img src='http://www.kongtiaoguanjia.com/"+data[0].cover_picture+"'/></a>";
+		 	brand_img+="<a href='../commodity/selectCommodityBycIdAndTarget.do?c_id="+data[1].c_id+"'><img src='http://www.kongtiaoguanjia.com/"+data[1].cover_picture+"' /></a>";
+		 	brand_img+="<a href='../commodity/selectCommodityBycIdAndTarget.do?c_id="+data[2].c_id+"'><img src='http://www.kongtiaoguanjia.com/"+data[2].cover_picture+"' /></a>";
+		 	brand_img+="<a href='../commodity/selectCommodityBycIdAndTarget.do?c_id="+data[3].c_id+"'><img src='http://www.kongtiaoguanjia.com/"+data[3].cover_picture+"' /></a>";
+		 	brand_img+="</figure>";
+				html2.append(brand_img);
+		},
+		error: function() {
+			alert("哎呀网络开小差了，稍等会吧！");
+			console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+		}
+	});
+})
+$(".classify").toggle(function(){
+				$(".menu").show();
+			},function(){
+				$(".menu").hide();
+			})
+</script>
+

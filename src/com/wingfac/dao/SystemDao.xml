@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.SystemDao">
+
+
+<!-- 查询标准地址 -->
+	<select id="getUserByUnameAndPwd" parameterType="Map" resultType="String">
+		select au_id from user 
+		where  mobile=#{mobile} 
+		and password=#{password} 
+		and type=#{type} 
+		<!-- <if test="type == 0">
+			and type = 0
+		</if>
+		<if test="type == 1">
+			and type in (1,2,3,4)
+		</if>
+		<if test="type == 2">
+			and type =  5
+		</if>  -->
+	</select>
+
+	<select id="getSystemNotice" resultType="String">
+		select system_notice
+		from sys_data
+	</select>
+
+	<select id="getHotGoodsLimitFour" resultType="Map">
+		select *
+		from commodity
+		where commodity_mark=2
+		limit 0,4
+	</select>
+	
+	<update id="updateShopBanner" parameterType="String">
+		update sys_data
+		set shop_banner =#{shop_banner}
+	</update>
+	
+	<select id="selectShopBannerFromSysData" resultType="String">
+		select shop_banner 
+		from sys_data
+	</select>
+	
+	<update id="updateSystemNoticeFromSysData" parameterType="String">
+		update sys_data
+		set system_notice=#{system_notice}
+	</update>
+	
+	<select id="">
+	
+	</select>
+	
+</mapper>

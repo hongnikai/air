@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<title>商城首页</title>
+	</head>
+
+	<body>
+		<nav class="homeNav padding1">
+			<!-- <div class="padding05 radius2" style="width: 85%;">
+				<input id="key" type="text" placeholder="请输入搜索关键词" />
+				<img src="../img/home_nav_search@2x.png" onclick="sousuo()" class="littlePic fr"/>
+				
+			</div> -->
+			<center><h1>空调金管家商城</h1></center>
+				<span style="float: right; display:block; margin-top:-10px;" href="../targetGongZhongHao/homePage.do">取消</span>
+		</nav>
+		<nav class="showNav padding05 borderTB">
+			<span>综合</span>
+			<span id="price">价格 <i></i></span>
+			<span id="sales">销量 <i></i></span>
+			<span class="screening">筛选</span>
+		</nav>
+		<figure class="hotSell">
+			<!--<a href=""><img src="img/img_sp@2x.png" />
+				<center class="padding05">首付交了手机费的历史</center>
+				<center class="redFont">￥199</center>
+			</a>
+			<a href=""><img src="img/img_yanshou@2x.png" />
+				<center class="padding05">首付交了手机费的历史</center>
+				<center class="redFont">￥199</center>
+			</a>
+			<a href=""><img src="img/img_yanshou@2x.png" />
+				<center class="padding05">首付交了手机费的历史</center>
+				<center class="redFont">￥199</center>
+			</a>
+			<a href=""><img src="img/img_home_md@2x.png" />
+				<center class="padding05">首付交了手机费的历史</center>
+				<center class="redFont">￥199</center>
+			</a>-->
+		</figure>
+		<aside class="layer"></aside>
+		<div class="commodityPopUp">
+			<ul>
+				<li>
+					<h3>品牌</h3>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+				</li>
+				<li>
+					<h3>品牌</h3>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+				</li>
+				<li>
+					<h3>品牌</h3>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+				</li>
+				<li>
+					<h3>品牌</h3>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+					<span>美的</span>
+				</li>
+			</ul>
+			<footer class="twoBtns">
+				<input type="reset" value="重置" class="reset" />
+				<input type="submit" value="确定" class="sure" />
+			</footer>
+		</div>
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			const URL = 'http://www.kongtiaoguanjia.com/air/commodity/selectCommodity.do';
+			function getJson(mark) {
+				$.ajax({
+					type: "post",
+					url: URL,
+					async: true,
+					dataType: "json",
+					data: {
+						'mark': mark
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '';
+						for(var i = 0, item; item = data.object.list[i++];) {
+							console.log(item);
+							str += `
+							<a id='${item.c_id}' href='../kefangwen/commodityDetail.html?id=${item.c_id}'>  <img src="http://wwwkongtiaoguanjia.com/${item.cover_picture}" />
+								<center class="padding05">${item.c_name}</center>
+								<center class="redFont">￥${item.price}</center>
+							</a>
+							`;
+						}
+						$('.hotSell').html(str);
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+			getJson(0);
+
+			$(".hotSell a").live("click", function() {
+				function setCookie(name, value, time) { /*存入cookie*/
+					var strsec = getsec(time);
+					var exp = new Date();
+					exp.setTime(exp.getTime() + strsec * 1);
+					document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+				}
+
+				function getsec(str) {
+					console.log(str);
+					var str1 = str.substring(1, str.length) * 1;
+					var str2 = str.substring(0, 1);
+					if(str2 == "s") {
+						return str1 * 1000;
+					} else if(str2 == "h") {
+						return str1 * 60 * 60 * 1000;
+					} else if(str2 == "d") {
+						return str1 * 24 * 60 * 60 * 1000;
+					}
+				}
+				var cId = $(this).attr("id"),
+					cName = $(this).find("center:first-of-type").html();
+				//				var cJson={"cId":cId,"cName":cName} 
+				setCookie("cName", cName, "s600");
+			})
+
+			$(".showNav>span#price").toggle(function() { /*价格升降*/
+				$(this).find("i").attr('class', 'iTop');
+				getJson(1);
+			}, function() {
+				$(this).find('i').attr('class', 'iBottom');
+				getJson(2)
+			})
+
+			$(".showNav>span#sales").toggle(function() { /*销量升降*/
+				$(this).find("i").attr('class', 'iTop');
+				getJson(4);
+			}, function() {
+				$(this).find('i').attr('class', 'iBottom');
+				getJson(3)
+			})
+
+			$('.commodityPopUp li span').click(function() {
+				$(this).addClass('popAct').siblings().removeClass('popAct');
+			})
+
+			$('.commodityPopUp .twoBtns .reset').click(function() {
+				$('.commodityPopUp li span').removeClass("popAct");
+			})
+
+			var layer = document.querySelector(".layer"),
+				commodityPopUp = document.querySelector(".commodityPopUp"),
+				screening = document.querySelector(".screening"),
+				sure = document.querySelector(".sure");
+			screening.onclick = function() {
+				layer.style.display = "block";
+				commodityPopUp.style.display = "block";
+			}
+			layer.onclick = function() {
+				this.style.display = "none";
+				commodityPopUp.style.display = "none";
+			}
+			sure.onclick = function() {
+				layer.style.display = "none";
+				commodityPopUp.style.display = "none";
+			}
+			//			var lis=commodityPopUp.querySelectorAll("li");
+			//			for(var li of lis){
+			//				var span=li.querySelectorAll("span");
+			//				span.onclick=function(){
+			//					this.className='popAct';
+			//					console.log(li)
+			//					console.log(span)
+			//				}
+			//			}
+		</script>
+	</body>
+<script type="text/javascript">
+function sousuo(){
+	
+	var keyword= $("#key").val();
+	window.location.href="../CommonController/selectGoodsByKeyWords.do?keyword="+keyword;
+	
+}
+</script>
+</html>

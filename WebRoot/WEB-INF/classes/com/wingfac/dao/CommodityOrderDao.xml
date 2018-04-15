@@ -1,0 +1,571 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.CommodityOrderDao">
+
+
+
+	<select id="selectCommodityOrderByOpenId" parameterType="String" resultType="Map">
+		select *
+		from commodity_order c
+		inner join user u
+		on u.au_id = c.au_id
+		inner join commodity com
+		on com.c_id = c.c_id
+		where u.open_id=#{open_id}
+	</select>
+	
+	<insert id="createCommodityOrder" parameterType="Map">
+		insert into 
+		commodity_order
+		(com_id,au_id,c_id,order_state,
+		total_price,pay_time,pay_id,
+		create_time,leave_message,
+		a_id,slice_flag,deposit,retainage
+		)
+		value
+		(
+		#{com_id},#{au_id},#{c_id},#{order_state},
+		#{total_price},#{pay_time},#{pay_id},
+		#{create_time},#{leave_message},
+		#{a_id},#{slice_flag},#{deposit},#{retainage}
+		)	
+	</insert>
+	
+	<select id="selectCommodityOrderByComId" parameterType="String" resultType="com.wingfac.entity.CommodityOrder">
+		select * 
+		from commodity_order
+		where com_id = #{com_id}
+	</select>
+	
+	<delete id="deleteCommodityOrderByComId" parameterType="String">
+		delete 
+		from commodity_order
+		where com_id = #{com_id}
+	</delete>
+	
+	<update id="updateCommodityOrderMoney" parameterType="Map">
+		update commodity_order
+		set saleman_id=#{saleman_id},other=#{other},
+		total_price=#{total_price},deposit=#{deposit},retainage=#{retainage}
+		where
+		com_id=#{com_id}
+	</update>
+	
+	<select id="getAllCommodityOrder" resultType="com.wingfac.entity.CommodityOrder">
+		select *
+		from commodity_order
+		where order_state=0 and saleman_id=0
+	</select>
+	
+	<update id="updateCommodityOrderPrivate" parameterType="String">
+		update commodity_order
+		set saleman_id=#{saleman_id}
+		where com_id=#{com_id}
+	</update>
+	
+	<select id="selectCommodityOrder" parameterType="Map" resultType="Map">
+		select 
+		commodity_order.com_id,user.nickname,user.headimg,
+		commodity_order.create_time,commodity.cover_picture,
+		commodity.c_name,commodity_order.deposit,
+		commodity_order.total_price,commodity_order.order_state
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		limit #{page},10
+	</select>
+	
+	<select id="countCommodityOrder" resultType="int"> 
+		select 
+		count(*)
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+	</select>
+	
+	<select id="selectCommodityOrderN" parameterType="Map" resultType="Map">
+		select 
+		commodity_order.com_id,user.nickname,user.headimg,
+		commodity_order.create_time,commodity.cover_picture,
+		commodity.c_name,commodity_order.deposit,
+		commodity_order.total_price,commodity_order.order_state
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		where order_state=0
+		or order_state=1
+		or order_state=100
+		limit #{page},10
+	</select>
+	
+	<select id="selectCountCommodityOrderN" resultType="int">
+		select 
+		count(*)
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		where order_state=0
+		or order_state=1
+		or order_state=100
+	</select>
+	
+	<select id="selectCommodityOrderY" resultType="Map" parameterType="Map">
+		select 
+		commodity_order.com_id,user.nickname,user.headimg,
+		commodity_order.create_time,commodity.cover_picture,
+		commodity.c_name,commodity_order.deposit,
+		commodity_order.total_price,commodity_order.order_state
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		where order_state=2
+		limit #{page},10
+	</select>
+	
+	<select id="selectCountCommodityOrderY" resultType="int">
+		select 
+		count(*)
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		where order_state=2
+	</select>
+	
+	<select id="getCommodityOrderId" parameterType="String" resultType="String">
+		select com_id
+		from commodity_order
+		where com_id=#{com_id}
+	</select>
+	
+	<select id="selectCommodityVagueUserNickname" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join user 
+		on user.au_id=commodity_order.au_id
+		inner JOIN commodity
+		on commodity.c_id=commodity_order.c_id
+		where user.nickname like #{keywords}
+	</select>
+	
+	<select id="selectCommodityVagueCommodityBrand" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join user 
+		on user.au_id=commodity_order.au_id
+		inner JOIN commodity
+		on commodity.c_id=commodity_order.c_id
+		where commodity.brand like #{keywords}
+	</select>
+	
+	<select id="selectComIdVague" parameterType="String" resultType="Map">
+		select 
+		commodity_order.com_id,user.nickname,user.headimg,
+		commodity_order.create_time,commodity.cover_picture,
+		commodity.c_name,commodity_order.deposit,
+		commodity_order.total_price,commodity_order.order_state
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		where commodity_order.com_id like #{keyword}
+	</select>
+	
+	<select id="selectCnameVague" parameterType="String" resultType="Map">
+		select 
+		commodity_order.com_id,user.nickname,user.headimg,
+		commodity_order.create_time,commodity.cover_picture,
+		commodity.c_name,commodity_order.deposit,
+		commodity_order.total_price,commodity_order.order_state
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on commodity_order.au_id=user.au_id
+		where commodity.c_name like #{keyword}
+	</select>
+	
+	<update id="updateCommodityOrderOrderState" parameterType="Map">
+		update commodity_order
+		set
+		order_state=#{order_state}
+		where com_id=#{com_id}
+	</update>
+	
+	<select id="selectCommodityOrderByAuId" parameterType="Map" resultType="Map">
+		select *
+		from commodity_order
+		inner join user
+		on user.au_id= commodity_order.au_id 
+		inner join address
+		on address.au_id=user.au_id
+		where user.au_id=#{au_id}
+		and
+		commodity_order.order_state=#{order_state}
+	</select>
+	
+	<select id="selectCommodityOrderInnerjoinCommodity" parameterType="String" resultType="Map"> 
+		select *
+		from commodity_order
+		inner join commodity 
+		on commodity_order.c_id=commodity.c_id
+		where commodity_order.com_id=#{com_id}
+	</select>
+	
+	<select id="selectAllCommodityOrderWaitForGet" resultType="Map">
+		select *
+		from commodity_order
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		where commodity_order.saleman_id='0'
+		and commodity_order.order_state=0
+	</select>
+	
+	<update id="salemanGetCommodityOrder" parameterType="String">
+		update commodity_order
+		<set>
+			<if test="saleman_id != null">
+				saleman_id=#{saleman_id}
+			</if>
+		</set>
+		where com_id=#{com_id}
+	</update>
+	
+	<select id="selectAllSalemanGetCommodityOrderNotComplate" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		where saleman_id=#{saleman_id} 
+		and order_state=0
+	</select>
+	
+	<update id="updateComPrice" parameterType="Map">
+		update commodity_order
+		<set>
+		<trim suffixOverrides=",">
+			<if test="total_price != null">total_price=#{total_price},</if>
+			<if test="other != null">other=#{other},</if>
+		</trim>
+		</set>
+		where com_id=#{com_id}	
+	</update>
+	
+	<!-- 查询销售订单，已完成，已评价 -->
+	<select id="selectCommodityOrder_state7" parameterType="String" resultType="Map"> 
+		select * 
+		from commodity_order
+		where saleman_id=#{saleman_id}
+		and order_state=7
+	</select>
+	
+	<select id="selectAllMyCommodityOrders" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where commodity_order.au_id=#{au_id}
+	</select>
+	
+	
+	
+	
+	<!-- 下面找出订单状态为0 的订单,且saleman_id=0 或=null 表示销售员还没有接单 -->
+	<select id="selectAllMyCommodityOrder_state0" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where commodity_order.au_id=#{au_id}
+		and order_state=0
+		and saleman_id='0'
+	</select>
+	
+	<!-- 下面找出 商用空调用户创建的 未完成的订单 都视为未付款-->
+	<select id="selectCentralAirCreateByUser" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where commodity_order.au_id=#{au_id}
+		and order_state=8
+	</select>
+	
+	
+	
+	<!-- 查询所有状态为8的订单 都是中央空调 且未被接单 -->
+	<select id="selectAllMyCommodityOrder_state8"  resultType="Map">
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where order_state=8
+		and saleman_id='0'
+	</select>
+	
+	<!-- 查询所有状态为8的订单 都是中央空调 且被该销售接单-->
+	<select id="selectAllSalemanCommodityOrder" parameterType="String" resultType="Map"> 
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where commodity_order.saleman_id=#{saleman_id}
+		and commodity_order.order_state=8
+	</select>
+	
+	<!-- 查询该销售员所有已付款的订单 -->
+	<select id="selectAllMyCommodityOrder_state1" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where commodity_order.au_id=#{au_id}
+		and commodity_order.order_state=1
+	</select>
+	
+	
+	<select id="selectAllSalemanCommodityOrder_state7" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order 
+		inner join commodity
+		on commodity_order.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where commodity_order.saleman_id=#{saleman_id}
+		and order_state=7  
+	</select>
+	
+	<select id="" parameterType="Map" resultType="Map">
+		select * 
+		from commodity_order
+		where c_id=#{c_id}
+		and au_id=#{au_id}
+		order by 
+		create_time desc
+		limit 0,1	
+	</select>
+	
+	<sql id="commodity_Order_key">
+		<trim suffixOverrides=",">
+			<if test="com_id != null">com_id,</if>
+			<if test="au_id != null">au_id,</if>
+			<if test="c_id != null">c_id,</if>
+			<if test="order_state != null">order_state,</if>
+			<if test="total_price != null">total_price,</if>
+			<if test="pay_time != null">pay_time,</if>
+			<if test="pay_id != null">pay_id,</if>
+			<if test="create_time != null">create_time,</if>
+			<if test="leave_message != null">leave_message,</if>
+			<if test="a_id != null">a_id,</if>
+			<if test="slice_flag != null">slice_flag,</if>
+			<if test="deposit != null">deposit,</if>
+			<if test="retainage != null">retainage,</if>
+			<if test="saleman_id != null">saleman_id,</if>
+			<if test="other != null">other,</if>
+			
+		</trim>
+	</sql>
+	
+	
+	<sql id="commodity_Order_value">
+		<trim suffixOverrides=",">
+			<if test="com_id != null">#{com_id},</if>
+			<if test="au_id != null">#{au_id},</if>
+			<if test="c_id != null">#{c_id},</if>
+			<if test="order_state != null">#{order_state},</if>
+			<if test="total_price != null">#{total_price},</if>
+			<if test="pay_time != null">#{pay_time},</if>
+			<if test="pay_id != null">#{pay_id},</if>
+			<if test="create_time != null">#{create_time},</if>
+			<if test="leave_message != null">#{leave_message},</if>		
+			<if test="a_id != null">#{a_id},</if>
+			<if test="slice_flag != null">#{slice_flag},</if>
+			<if test="deposit != null">#{deposit},</if>
+			<if test="retainage != null">#{retainage},</if>
+			<if test="saleman_id != null">#{saleman_id},</if>	
+			<if test="other != null">#{other},</if>	
+		</trim>
+	</sql>
+	
+	<insert id="insertCommodityOrder" parameterType="Map">
+		insert into commodity_order (<include refid="commodity_Order_key" />) values(<include refid="commodity_Order_value"/>)
+	</insert>
+	
+	<select id="getCommodityOrderByComId" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		where com_id=#{com_id}
+	</select>
+	
+	<select id="selectCommodityOrderBytiaojian" parameterType="Map" resultType="Map"> 
+		select *
+		from commodity_order
+		where c_id=#{c_id}
+		and total_price=#{total_price}
+		and au_id=#{au_id}
+		order by pay_time
+		desc
+		limit 0,1
+	</select>
+	
+	<update id="updateCommodityOrderState1" parameterType="Map">
+		update commodity_order
+		<set>
+		  <trim suffixOverrides=",">
+			<if test="order_state != null">order_state=#{order_state},</if>
+			<if test="a_id != null">a_id=#{a_id},</if>
+			<if test="slice_flag != null">slice_flag=#{slice_flag},</if>
+			<if test="deposit != null">deposit=#{deposit},</if>
+			<if test="retainage != null">retainage=#{retainage},</if>
+	      </trim>
+		</set>
+		where com_id=#{com_id}
+	</update>
+	
+	<select id="selectUserCentralAirNotPay" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join user
+		on user.au_id=commodity_order.au_id
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		where commodity_order.order_state=8
+		and commodity.use_type=2
+		and user.au_id=#{au_id}
+	</select>
+	
+	<select id="selectUserCentralAirPay" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join user
+		on user.au_id=commodity_order.au_id
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		where commodity_order.order_state=1
+		and commodity.use_type=2
+		and user.au_id=#{au_id}
+	</select>
+	
+	<select id="selectUserCentralAirEvaluated" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join user
+		on user.au_id=commodity_order.au_id
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join commodity_evaluate
+		on commodity_evaluate.c_id=commodity_order.c_id
+		where commodity_order.order_state=7
+		and commodity.use_type=2
+		and user.au_id=#{au_id}
+	</select>
+	
+	<select id="selectOwnNotPay" parameterType="String" resultType="Map"> 
+		select * 
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where user.au_id=#{au_id}
+		and commodity_order.order_state=0
+		or commodity_order.order_state=8
+	</select>
+	
+	<select id="selecOwnPay" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where user.au_id=#{au_id}
+		and commodity_order.order_state=1
+	</select>
+	
+	<select id="selectOwnEvalute" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		inner join commodity_evaluate
+		on commodity_evaluate.c_id=commodity_order.c_id
+		where user.au_id=#{au_id}
+		and commodity_order.order_state=7
+	</select>
+	
+	<update id="updateCommodityOrderPrice" parameterType="Map">
+		update commodity_order
+		<set>
+			<trim suffixOverrides=",">
+				<if test="total_price !=null">total_price=#{total_price},</if>
+				<if test="retainage !=null">retainage=#{retainage},</if>
+				<if test="other !=null">other=#{other},</if>
+			</trim>
+		</set>
+		where com_id=#{com_id}
+	</update>
+	
+	<select id="selectCentralAirOrdersNotPay" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where user.au_id=#{au_id}
+		and commodity_order.order_state=8
+	</select>
+	
+	<select id="selectNomalAirOrdersNotPay" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		inner join user
+		on user.au_id=commodity_order.au_id
+		where user.au_id=#{au_id}
+		and commodity_order.order_state=0
+	</select>
+	
+	<select id="selectEmployeeCommodityOrder" parameterType="String" resultType="Map">
+		select *
+		from commodity_order
+		inner join commodity
+		on commodity.c_id=commodity_order.c_id
+		where saleman_id=#{saleman_id}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+</mapper>

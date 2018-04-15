@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<title>我要安装</title>
+	</head>
+
+	<body>
+		<header class="header">
+			<a href="javascript:history.back()"><img src="../img/icon_back@2x.png" /></a>
+			<center>我要安装</center>
+		</header>
+		<ul class="installList mT5">
+			<li class="installType">
+				<h3>请选择安装类型</h3>
+				<span onclick="fun_ins_state(0)">单装</span>
+				<span onclick="fun_ins_state(1)">单拆</span>
+				<span onclick="fun_ins_state(2)">移机</span>
+				<span class="installAct" onclick="fun_ins_state(3)">新空调安装</span>
+			</li>
+			
+			<li class="airBrand">
+				<h3>空调品牌</h3>
+				<span onclick="fun_brand('美的')">美的</span>
+				<span class="installAct" onclick="fun_brand('格力')">格力</span>
+				<span onclick="fun_brand('大金')">大金</span>
+				<span onclick="fun_brand('奥克斯')">奥克斯</span>
+			</li>
+			<li class="airUse">
+				<h3>空调用途</h3>
+				<span class="installAct" onclick="fun_purpose(0)">家用分体式</span>
+				<span onclick="fun_purpose(1)">家用中央空调</span>
+				<span onclick="fun_purpose(2)">商用中央空调</span>
+			</li>
+			<li class="airType">
+				<h3>空调类型</h3>
+				<span class="installAct" onclick="fun_type(0)">挂机</span>
+				<span onclick="fun_type(1)">柜机</span>
+				<span onclick="fun_type(2)">分体机</span>
+			</li>
+			<li class="lmx">
+				<h3>匹数</h3>
+				<span class="installAct" onclick="fun_level('1匹')">1匹</span>
+				<span onclick="fun_level('小1.5匹')">小1.5匹</span>
+				<span onclick="fun_level('1.5匹')">1.5匹</span>
+				<span onclick="fun_level('2匹')">2匹</span>
+				<span onclick="fun_level('2.5匹')">2.5匹</span>
+				<span onclick="fun_level('3匹')">3匹</span>
+				<span onclick="fun_level('10匹')">10匹</span>
+			</li>
+		</ul>
+		<form action="../InstallController/insertInstallGongZhongHao.do" ><!-- 提交安装 -->
+			<input id="ins_state" name="ins_state" value="3" style="display: none;"/><!-- 提交安装类型 -->
+			<input id="brand" name="brand" value="格力" style="display: none;"/><!-- 提交空调品牌 -->
+			<input id="purpose" name="purpose" value="0"  style="display: none;"/><!-- 提交空调用途 -->
+			<input id="type" name="type" value="0"  style="display: none;"/><!-- 提交空调类型 -->
+			<input id="level" name="level" value="1匹" style="display: none;" /><!-- 提交空调 -->
+		<input type="submit" class="longBtn" value="下一步" id="next"/>
+		</form>
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$('.installList li span').click(function() {
+				$(this).addClass('installAct').siblings().removeClass('installAct');
+			})
+
+			var installArr = new Array();
+			$("#next").click(function() {
+				$('.installList li span.installAct').each(function() {
+					var index = $(this).index() - 1;
+					installArr.push(index);
+				})
+				var installJson = JSON.stringify(installArr);
+				console.log(installArr);
+				console.log(installJson);
+			})
+			
+		</script>
+	</body>
+<script type="text/javascript">
+function fun_ins_state(data){
+	$("#ins_state").val(data);
+}
+ function fun_brand(data){
+	$("#brand").val(data);
+}
+function fun_purpose(data){
+	$("#purpose").val(data);
+}
+function fun_type(data){
+	$("#type").val(data);
+}
+function fun_level(data){
+	$("#level").val(data);
+}
+</script>
+</html>

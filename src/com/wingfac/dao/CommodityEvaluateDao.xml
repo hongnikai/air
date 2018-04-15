@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.CommodityEvaluateDao">
+
+		
+	<insert id="insertCommodityEvaluateBycId" parameterType="Map">
+		insert into 
+		commodity_evaluate(
+		eva_id,c_id,au_id,nickname,
+		head_img,eva_time,content,
+		picture,reply,type,commodity_score,
+		sales_man_score,Installer_score
+		)
+		value
+		(
+		#{eva_id},#{c_id},#{au_id},#{nickname},
+		#{head_img},#{eva_time},#{content},
+		#{picture},#{reply},#{type},#{commodity_score},
+		#{sales_man_score},#{installer_score}
+		)
+	</insert>
+	
+	<select id="getCommodityEvaluateBycId" parameterType="String" resultType="com.wingfac.entity.CommodityEvaluate">
+		select * 
+		from commodity_evaluate c
+		where c.c_id =#{c_id}
+	</select>	
+	
+	<select id="selectCommodityInnerJoinEvaluateByc_id" parameterType="String" resultType="Map"> 
+		select *
+		from commodity
+		inner join commodity_evaluate
+		on commodity.c_id=commodity_evaluate.c_id
+		inner join user
+		on user.au_id=commodity_evaluate.au_id
+		where commodity.c_id=#{c_id}
+	</select>
+	
+	<sql id="Eva_key">
+		<trim suffixOverrides=",">
+			<if test="eva_id != nulll">eva_id,</if>
+			<if test="c_id != nulll">c_id,</if>
+			<if test="au_id != nulll">au_id,</if>
+			<if test="com_id != null">com_id,</if>
+			<if test="nickname != nulll">nickname,</if>
+			<if test="head_img != nulll">head_img,</if>
+			<if test="eva_time != nulll">eva_time,</if>
+			<if test="content != nulll">content,</if>
+			<if test="picture != nulll">picture,</if>
+			<if test="reply != nulll">reply,</if>
+			<if test="type != nulll">type,</if>
+			<if test="commodity_score != nulll">commodity_score,</if>
+			<if test="sales_man_score != nulll">sales_man_score,</if>
+			<if test="installer_score != nulll">installer_score,</if>
+		</trim>
+	</sql>
+	
+	<sql id="Eva_value">
+		<trim suffixOverrides=",">
+			<if test="eva_id != nulll">#{eva_id},</if>
+			<if test="c_id != nulll">#{c_id},</if>
+			<if test="au_id != nulll">#{au_id},</if>
+			<if test="com_id != null">#{com_id},</if>
+			<if test="nickname != nulll">#{nickname},</if>
+			<if test="head_img != nulll">#{head_img},</if>
+			<if test="eva_time != nulll">#{eva_time},</if>
+			<if test="content != nulll">#{content},</if>
+			<if test="picture != nulll">#{picture},</if>
+			<if test="reply != nulll">#{reply},</if>
+			<if test="type != nulll">#{type},</if>
+			<if test="commodity_score != nulll">#{commodity_score},</if>
+			<if test="sales_man_score != nulll">#{sales_man_score},</if>
+			<if test="installer_score != nulll">#{installer_score},</if>
+		</trim>
+	</sql>	
+	
+	<insert id="insertCommodityEvaluate" parameterType="Map">
+		insert into commodity_evaluate (<include refid="Eva_key"/>) values (<include refid="Eva_value"/>)
+	</insert>
+	
+	<select id="selectEvaluteByCidAndAuid" parameterType="String" resultType="Map">
+		select *
+		from commodity_evaluate
+		inner join commodity
+		on commodity.c_id=commodity_evaluate.c_id
+		inner join commodity_order
+		on commodity_order.c_id=commodity.c_id
+		where commodity_order.com_id=#{com_id} 
+		and	commodity_evaluate.c_id=#{c_id}
+		and commodity_evaluate.au_id=#{au_id}
+	</select>
+	
+	<select id="selectCommodityEvaInnerJoinUserByComId" parameterType="String" resultType="Map">
+		select *
+		from commodity_evaluate
+		inner join user
+		on user.au_id=commodity_evaluate.au_id
+		where com_id=#{com_id}
+	</select>
+	
+</mapper>

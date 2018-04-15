@@ -1,0 +1,746 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.CommodityDao">
+	
+	<insert id="insertCommodity_Messages" parameterType="Map">
+		insert into 
+		commodity 
+		(c_id,s_id,c_name,price,brand,use_type,create_time,
+		repair_time,insert__pack_size,insert_plies_max,
+		insert_weight,insert_size,cold_power,cold_amount,
+		out_pack_size,out_plies_max,out_size,out_weight,
+		indoor_noise,outdoor_noise,smart_type,heating_power,
+		air_board_color,efficiency_number,air_type,temperature_type,
+		air_power,suit_area,customer_service,work_method,
+		power_level,wind_refresh_yes_or_not,out_net_weight,
+		insert_net_weight,commodity_details
+		)
+		value
+		(#{c_id},#{s_id},#{c_name},#{price},#{brand},#{use_type},#{create_time},
+		#{repair_time},#{insert__pack_size},#{insert_plies_max},
+		#{insert_weight},#{insert_size},#{cold_power},#{cold_amount},
+		#{out_pack_size},#{out_plies_max},#{out_size},#{out_weight},
+		#{indoor_noise},#{outdoor_noise},#{smart_type},#{heating_power},
+		#{air_board_color},#{efficiency_number},#{air_type},#{temperature_type},
+		#{air_power},#{suit_area},#{customer_service},#{work_method},
+		#{power_level},#{wind_refresh_yes_or_not},#{out_net_weight},
+		#{insert_net_weight},#{commodity_details}
+		)
+	</insert>
+	
+	<select id="selectCommodityByscreen" parameterType="Map" resultType="com.wingfac.entity.Commodity">
+		select * 
+		from commodity 
+		where 1 = 1
+		and brand = #{brand}
+		and use_type = #{use_type}
+		and type = #{type}
+		and frequency = #{frequency}
+		and level = #{level}
+	</select>
+	
+	<select id="selectStoreGoodsByauId" parameterType="String" resultType="com.wingfac.entity.Commodity">
+		select * 
+		from commodity c 
+		where c.s_id=(
+		select s.s_id
+		from store s
+		where s.au_id=#{au_id})
+	</select>
+	
+	<select id="selectCommoditys" resultType="com.wingfac.entity.Commodity">
+		select * 
+		from commodity
+	</select>
+	
+	<select id="selectAllcommodityByasc" resultType="com.wingfac.entity.Commodity">
+		select * 
+		from commodity 
+		ORDER BY price ASC
+	</select>
+	
+	<select id="selectCommodityNotCentralAirConditionAsc" resultType="com.wingfac.entity.Commodity">
+		select * 
+		from commodity
+		where 
+		use_type!=2
+		ORDER BY price ASC
+	</select>
+	
+	<select id="selectAllcommodityBydesc" resultType="com.wingfac.entity.Commodity">
+		select *
+		from commodity
+		order by price desc
+	</select>
+	
+	<select id="selectCommodityNotCentralAirConditionDesc" resultType="com.wingfac.entity.Commodity">
+		select *
+		from commodity
+		where use_type !=2
+		order by price 
+		desc
+	</select>
+	
+	<select id="selectCommodityBySaleCountsDesc" resultType="com.wingfac.entity.CommoditySaleCounts_resultBean"><!-- 根据销量排序商品 1查商品信息，及销量 2根据销量排序 -->
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		ORDER BY 
+		counts desc
+	</select>
+	
+	<select id="selectCommodiyBySaleCountsNotCentralAirConditionDesc" resultType="com.wingfac.entity.CommoditySaleCounts_resultBean">
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		where use_type !=2
+		ORDER BY 
+		counts desc
+	</select>
+	
+	<select id="selectCommodityBySaleCountsAsc" resultType="com.wingfac.entity.CommoditySaleCounts_resultBean">
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		ORDER BY 
+		counts asc
+	</select>
+	
+	<select id="selectCommodityBySaleCountsNotCentralAirConditionAsc" resultType="com.wingfac.entity.CommoditySaleCounts_resultBean">
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		where use_type !=2
+		ORDER BY 
+		counts asc
+	</select>
+	
+	
+	<select id="getCommodityByc_id" parameterType="String" resultType="com.wingfac.entity.Commodity">
+		select *
+		from commodity
+		where commodity.c_id = #{c_id}
+	</select>
+	
+	<insert	id="insertCommodityAsk" parameterType="Map">
+		insert into 
+		commodity_ask
+		(ask_id,c_id,au_id,ask_content,create_time,other)
+		value
+		(#{ask_id},#{c_id},#{au_id},#{ask_content},#{create_time},#{other})
+	</insert>
+	
+	<select id="selectAskBycId" parameterType="String" resultType="com.wingfac.entity.CommodityAsk">
+		select * 
+		from commodity_ask
+		where c_id = #{c_id}
+	</select>
+	
+	<insert id="addCommodityAnswer" parameterType="Map">
+		insert into
+		commodity_answer
+		(answer_id,ask_id,au_id,answer_content,create_time,useful)
+		value
+		(#{answer_id},#{ask_id},#{au_id},#{answer_content},#{create_time},#{useful})
+	</insert>
+	
+	<select id="selectCommodityAnswerByaskId" parameterType="String" resultType="Map">
+		select 
+		commodity_answer.answer_id,
+		commodity_answer.ask_id,
+		commodity_answer.create_time,
+		commodity_answer.answer_content,
+		commodity_answer.useful,
+		user.au_id as au_id,
+		user.nickname as nickname,
+		user.headimg as headimg
+		from commodity_answer
+		inner join user
+		on user.au_id=commodity_answer.au_id
+		where ask_id = #{ask_id}
+		order by  commodity_answer.create_time
+		DESC
+	</select>	
+	
+	<select id="selectFourHotCommodity" resultType="com.wingfac.entity.CommoditySaleCounts_resultBean">
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		ORDER BY 
+		counts desc
+		limit 0,4
+	</select>
+	
+	<select id="getAllCommodity" parameterType="Map" resultType="Map">
+		select *
+		from commodity
+		limit #{page},10
+	</select>
+	
+	<select id="CountAllCommodity" resultType="int">
+		select count(*)
+		from commodity
+	</select>
+	
+	<select id="selectEvaluateBycId" parameterType="String" resultType="Map">
+		select *
+		from commodity_evaluate
+		where c_id=#{c_id}
+	</select>
+	
+	<select id="selectEvaluateBycIdInnerJoinUser" parameterType="String" resultType="Map">
+		select *
+		from commodity_evaluate
+		inner join user
+		on user.au_id=commodity_evaluate.au_id
+		where commodity_evaluate.c_id=#{c_id}
+	</select>
+	
+	
+	<update id="updateCoverPictureBycId" parameterType="String">
+		update commodity
+		set cover_picture=#{cover_picture,jdbcType=VARCHAR}
+		where c_id=#{c_id}
+	</update>
+	
+	<update id="updateCommodityUseType" parameterType="Map">
+		update commodity
+		set use_type=#{use_type}
+		where c_id=#{c_id}
+	</update>
+	
+	<update id="updateCommodityInformation" parameterType="Map">
+		update commodity
+		<set>
+			<if test="c_name != null and c_name != ''">
+				c_name = #{c_name,jdbcType=VARCHAR},
+			</if>
+			<if test="price != null and price != ''">
+				price = #{price,jdbcType=DOUBLE},
+			</if>
+			<if test="brand != null and brand != ''">
+				brand = #{brand,jdbcType=VARCHAR},
+			</if>
+			<if test="create_time != null and create_time != ''">
+				create_time = #{create_time,jdbcType=VARCHAR},
+			</if>
+			<if test="repair_time != null and repair_time != ''">
+				repair_time = #{repair_time,jdbcType=VARCHAR},
+			</if> 
+			 <if test="insert_pack_size != null and insert_pack_size != ''">
+				insert_pack_size = #{insert_pack_size,jdbcType=VARCHAR},
+			</if>
+			<if test="insert_plies_max != null and insert_plies_max != ''">
+				insert_plies_max = #{insert_plies_max,jdbcType=VARCHAR},
+			</if>
+			<if test="insert_weight != null and insert_weight != ''">
+				insert_weight = #{insert_weight,jdbcType=VARCHAR},
+			</if>
+			<if test="insert_size != null and insert_size != ''">
+				insert_size = #{insert_size,jdbcType=VARCHAR},
+			</if>
+			<if test="cold_power != null">
+				cold_power = #{cold_power,jdbcType=VARCHAR},
+			</if> 
+			<if test="cold_amount != null">
+				cold_amount = #{cold_amount,jdbcType=VARCHAR},
+			</if> 
+			<if test="hot_power != null and hot_power != ''">
+				hot_power = #{hot_power,jdbcType=VARCHAR},
+			</if> 
+			<if test="hot_amount != null and hot_amount != ''">
+				hot_amount = #{hot_amount,jdbcType=VARCHAR},
+			</if> 
+			 <if test="out_pack_size != null and out_pack_size != ''">
+				out_pack_size = #{out_pack_size,jdbcType=VARCHAR},
+			</if> 
+			<if test="out_plies_max != null and out_plies_max != ''">
+				out_plies_max = #{out_plies_max,jdbcType=VARCHAR},
+			</if> 
+			<if test="out_size != null and out_size != ''">
+				out_size = #{out_size,jdbcType=VARCHAR},
+			</if>
+			<if test="out_weight != null and out_weight != ''">
+				out_weight = #{out_weight,jdbcType=VARCHAR},
+			</if>
+			<if test="indoor_noise != null and indoor_noise != ''">
+				indoor_noise = #{indoor_noise,jdbcType=VARCHAR},
+			</if>
+			<if test="outdoor_noise != null and outdoor_noise != ''">
+				outdoor_noise = #{outdoor_noise,jdbcType=VARCHAR},
+			</if>
+			<if test="smart_type != null and smart_type != ''">
+				smart_type = #{smart_type,jdbcType=VARCHAR},
+			</if>
+			<if test="heating_power != null and heating_power != ''">
+				heating_power = #{heating_power,jdbcType=VARCHAR},
+			</if>
+			<if test="air_board_color != null and air_board_color != ''">
+				air_board_color = #{air_board_color,jdbcType=VARCHAR},
+			</if>
+			<if test="efficiency_number != null and efficiency_number != ''">
+				efficiency_number = #{efficiency_number,jdbcType=VARCHAR},
+			</if>
+			<if test="air_type != null and air_type != ''">
+				air_type = #{air_type,jdbcType=VARCHAR},
+			</if>
+			<if test="temperature_type != null and temperature_type != ''">
+				temperature_type = #{temperature_type,jdbcType=VARCHAR},
+			</if>
+			<if test="air_power != null and air_power != ''">
+				air_power = #{air_power,jdbcType=VARCHAR},
+			</if>
+			<if test="suit_area != null and suit_area != ''">
+				suit_area = #{suit_area,jdbcType=VARCHAR},
+			</if>
+			<if test="customer_service != null and customer_service != ''">
+				customer_service = #{customer_service,jdbcType=VARCHAR},
+			</if> 
+			<if test="work_method != null and work_method != ''">
+				work_method = #{work_method,jdbcType=VARCHAR},
+			</if> 
+			<if test="power_level != null and power_level != ''">
+				power_level = #{power_level,jdbcType=VARCHAR},
+			</if> 
+			<if test="wind_refresh_yes_or_not != null and wind_refresh_yes_or_not != ''">
+				wind_refresh_yes_or_not = #{wind_refresh_yes_or_not,jdbcType=VARCHAR},
+			</if> 
+			<if test="out_net_weight != null and out_net_weight != ''">
+				out_net_weight = #{out_net_weight,jdbcType=VARCHAR},
+			</if> 
+			<if test="insert_net_weight != null and insert_net_weight != ''">
+				insert_net_weight = #{insert_net_weight,jdbcType=VARCHAR},
+			</if> 
+			<if test="commodity_details != null and commodity_details != ''">
+				commodity_details = #{commodity_details,jdbcType=VARCHAR},
+			</if>
+			<if test="detaile_picture != null and detaile_picture != ''">
+				detaile_picture = #{detaile_picture,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where c_id=#{c_id}
+	</update>
+	
+	<update id="updateCommodityMarkBycId" parameterType="Map">
+		update commodity
+		set commodity_mark=#{commodity_mark}
+		where c_id=#{c_id}
+	</update>
+	
+	<select id="selectCommodityVague" parameterType="String" resultType="com.wingfac.entity.Commodity">
+		select *
+		from commodity
+		where brand like #{keyword}
+		and commodity_mark=4
+	</select>
+	
+	<select id="selectCommodityBrandVague" parameterType="String" resultType="Map">
+		select *
+		from commodity
+		where brand like #{keyword}
+	</select>
+	
+	<select id="selectCommodityCnameVague" parameterType="String" resultType="Map">
+		select *
+		from commodity
+		where c_name like #{keyword}
+	</select>
+	
+		<sql id="key">
+      <trim suffixOverrides=","><!-- 去除多余后缀 -->
+        <if test="c_id != null">
+            c_id,
+        </if>
+        <if test="c_name!=null">
+            c_name,
+        </if>
+        <if test="use_type != null">
+            use_type,
+        </if>
+        <if test="cover_picture != null">
+            cover_picture,
+        </if>
+        <if test="detaile_picture != null">
+            detaile_picture,
+        </if>
+        <if test="price != null">
+            price,
+        </if>
+        <if test="brand != null">
+            brand,
+        </if>
+        <if test="create_time != null">
+            create_time,
+        </if>
+        <if test="repair_time != null">
+            repair_time,
+        </if>
+        <if test="insert_pack_size != null">
+            insert_pack_size,
+        </if>
+        <if test="insert_plies_max != null">
+            insert_plies_max,
+        </if>
+        <if test="insert_weight != null">
+            insert_weight,
+        </if>
+        <if test="insert_size != null">
+            insert_size,
+        </if>
+        <if test="cold_power != null">
+            cold_power,
+        </if>
+        <if test="cold_amount != null">
+            cold_amount,
+        </if>
+        <if test="hot_power != null">
+            hot_power,
+        </if>
+        <if test="hot_amount != null">
+            hot_amount,
+        </if>
+        <if test="out_pack_size != null">
+            out_pack_size,
+        </if>
+        <if test="out_plies_max != null">
+            out_plies_max,
+        </if>
+        <if test="out_size != null">
+            out_size,
+        </if>
+        <if test="out_weight != null">
+            out_weight,
+        </if>
+        <if test="indoor_noise != null">
+            indoor_noise,
+        </if>
+        <if test="outdoor_noise != null">
+            outdoor_noise,
+        </if>
+         <if test="smart_type != null">
+            smart_type,
+        </if>
+         <if test="heating_power != null">
+            heating_power,
+        </if>
+         <if test="air_board_color != null">
+            air_board_color,
+        </if>
+         <if test="efficiency_number != null">
+            efficiency_number,
+        </if>
+         <if test="air_type != null">
+            air_type,
+        </if>
+         <if test="temperature_type != null">
+            temperature_type,
+        </if>
+         <if test="air_power != null">
+            air_power,
+        </if>
+         <if test="suit_area != null">
+            suit_area,
+        </if>
+         <if test="customer_service != null">
+            customer_service,
+        </if>
+         <if test="work_method != null">
+            work_method,
+        </if>
+        <if test="power_level != null">
+            power_level,
+        </if>
+        <if test="wind_refresh_yes_or_not != null">
+            wind_refresh_yes_or_not,
+        </if>
+        <if test="out_net_weight != null">
+            out_net_weight,
+        </if>
+        <if test="insert_net_weight != null">
+            insert_net_weight,
+        </if>
+        <if test="commodity_details != null">
+            commodity_details,
+        </if>
+      </trim>
+    </sql>
+	
+	<sql id="value">
+      <trim suffixOverrides=",">
+        <if test="c_id != null">
+            #{c_id},
+        </if>
+        <if test="c_name != null">
+            #{c_name},
+        </if>
+        <if test="use_type != null">
+            #{use_type},
+        </if>
+        <if test="cover_picture != null">
+            #{cover_picture},
+        </if>
+        <if test="detaile_picture != null">
+            #{detaile_picture},
+        </if>
+        <if test="price != null">
+            #{price},
+        </if>
+        <if test="brand != null">
+            #{brand},
+        </if>
+        <if test="create_time != null">
+            #{create_time},
+        </if>
+        <if test="repair_time != null">
+            #{repair_time},
+        </if>
+        <if test="insert_pack_size != null">
+            #{insert_pack_size},
+        </if>
+        <if test="insert_plies_max != null">
+            #{insert_plies_max},
+        </if>
+        <if test="insert_weight != null">
+            #{insert_weight},
+        </if>
+        <if test="insert_size != null">
+            #{insert_size},
+        </if>
+        <if test="cold_power != null">
+            #{cold_power},
+        </if>
+        <if test="cold_amount != null">
+            #{cold_amount},
+        </if>
+        <if test="hot_power != null">
+            #{hot_power},
+        </if>
+        <if test="hot_amount != null">
+            #{hot_amount},
+        </if>
+        <if test="out_pack_size != null">
+            #{out_pack_size},
+        </if>
+        <if test="out_plies_max != null">
+            #{out_plies_max},
+        </if>
+        <if test="out_size != null">
+            #{out_size},
+        </if>
+        <if test="out_weight != null">
+            #{out_weight},
+        </if>
+        <if test="indoor_noise != null">
+            #{indoor_noise},
+        </if>
+        <if test="outdoor_noise != null">
+            #{outdoor_noise},
+        </if>
+        <if test="smart_type != null">
+            #{smart_type},
+        </if>
+        <if test="heating_power != null">
+            #{heating_power},
+        </if>
+        <if test="air_board_color != null">
+            #{air_board_color},
+        </if>
+        <if test="efficiency_number != null">
+            #{efficiency_number},
+        </if>
+        <if test="air_type != null">
+            #{air_type},
+        </if>
+        <if test="temperature_type != null">
+            #{temperature_type},
+        </if>
+        <if test="air_power != null">
+            #{air_power},
+        </if>
+        <if test="suit_area != null">
+            #{suit_area},
+        </if>
+        <if test="customer_service !=null">
+        	#{customer_service},
+        </if>
+        <if test="work_method != null">
+            #{work_method},
+        </if>
+        <if test="power_level != null">
+            #{power_level},
+        </if>
+        <if test="wind_refresh_yes_or_not != null">
+            #{wind_refresh_yes_or_not},
+        </if>
+        <if test="out_net_weight != null">
+            #{out_net_weight},
+        </if>
+        <if test="insert_net_weight != null">
+            #{insert_net_weight},
+        </if>
+        <if test="commodity_details != null">
+            #{commodity_details},
+        </if>
+      </trim>
+    </sql>
+	
+	
+	<insert id="insertCommodity" parameterType="Map">
+	 insert into commodity(<include refid="key"/>) values(<include refid="value"/>);
+	</insert>
+	
+	
+	<!-- 查询品牌活动 -->
+	<select id="getCommodityActivity" parameterType="Map" resultType="Map">
+		select *
+		from commodity
+		where commodity_mark=#{commodity_mark}
+	</select>
+	
+	<select id="selectCommodityOrder_orderState" parameterType="String" resultType="Map">
+		select * 
+		from commodity_order
+		where saleman_id=#{saleman_id}
+		and order_state=1
+	</select>
+	
+	<insert id="addCommodityToCommodityCar" parameterType="Map">
+		insert into commodity_car
+		(c_car_id,c_id,au_id)
+		values
+		(#{c_car_id},#{c_id},#{au_id})
+	</insert>
+	
+	<select id="selectUserAllCommodityInCommodityCar" parameterType="String" resultType="Map">
+		select *
+		from commodity_car
+		inner join commodity
+		on commodity.c_id=commodity_car.c_id
+		where
+		commodity_car.au_id=#{au_id}
+	</select>
+	
+	<select id="selectCommodityCarPrice" parameterType="String" resultType="double">
+		select sum(commodity.price)
+		from commodity_car
+		inner join commodity
+		on commodity.c_id=commodity_car.c_id
+		where
+		commodity_car.au_id=#{au_id}
+	</select>
+	
+	<select id="selectCommodityNotCentralAirCondition" resultType="Map">
+		select *
+		from commodity
+		where use_type!=2
+	</select>
+	
+	<select id="selectCommodityCarInformationInnerJoin" parameterType="String" resultType="Map">
+		select *
+		from commodity_car
+		inner join commodity
+		on commodity_car.c_id=commodity.c_id
+		inner join user
+		on user.au_id=commodity_car.au_id
+		where commodity_car.c_car_id=#{c_car_id}
+	</select>
+	
+	<delete id="delectCommodityInCart" parameterType="String">
+		delete
+		from commodity_car
+		where c_car_id=#{c_car_id}
+	</delete>
+	
+	
+	<select id="getCommodityPriceByc_car_id" parameterType="String" resultType="Map">
+		select *
+		from commodity_car
+		inner join commodity
+		on commodity.c_id=commodity_car.c_id
+		where commodity_car.c_car_id=#{c_car_id}
+	</select>
+	
+	<select id="selectAllCentralAirCondition" resultType="Map">
+		select *
+		from commodity
+		where use_type=2
+	</select>
+	
+	<select id="selectAllCentralAirConditionOrderByPriceDesc" resultType="Map">
+		select *
+		from commodity
+		where use_type=2
+		order by price
+		desc
+	</select>
+	
+	<select id="selectAllCentralAirConditionOrderByPriceAsc" resultType="Map">
+		select *
+		from commodity
+		where use_type=2
+		order by price
+		asc
+	</select>
+	
+	<select id="selecAllCentralAirConditionOrderBySaleCountsDesc" resultType="Map">
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		where use_type=2
+		ORDER BY 
+		counts desc
+	</select>
+	
+	<select id="selecAllCentralAirConditionOrderBySaleCountsAsc" resultType="Map">
+		SELECT commodity.c_name,commodity.c_id,price,commodity.cover_picture,
+		(SELECT count( * ) FROM commodity_order where  commodity.c_id = commodity_order.c_id ) AS counts 
+		FROM
+		commodity 
+		where use_type=2
+		ORDER BY 
+		counts asc
+	</select>
+	
+	<sql id="answer_key">
+		<trim suffixOverrides=",">
+			<if test="answers_id != null">answers_id,</if>
+			<if test="ask_id != null">ask_id,</if>
+			<if test="au_id != null">au_id,</if>
+			<if test="content != null">content,</if>
+			<if test="mark != null">mark,</if>
+			<if test="create_time != null">create_time,</if>
+		</trim>
+	</sql>
+	
+	<sql id="answer_value">
+		<trim suffixOverrides=",">
+			<if test="answers_id != null">#{answers_id},</if>
+			<if test="ask_id != null">#{ask_id},</if>
+			<if test="au_id != null">#{au_id},</if>
+			<if test="content != null">#{content},</if>
+			<if test="mark != null">#{mark},</if>
+			<if test="create_time != null">#{create_time},</if>
+		</trim>
+	</sql>
+	
+	<insert id="insertAskAllAnswers" parameterType="Map">
+		insert into ask_all_answers (<include refid="answer_key"/>) values(<include refid="answer_value"/>)
+	</insert>
+	
+	<select id="chooseCommodityByScreen" parameterType="Map" resultType="Map">
+		select *
+		from commodity
+		where brand like #{brand}
+		and use_type like #{use_type}
+		and type like #{type}
+		and frequency like #{frequency}
+		and level like #{level}
+	</select>
+	
+</mapper>

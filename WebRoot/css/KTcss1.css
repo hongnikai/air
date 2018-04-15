@@ -1,0 +1,167 @@
+*{ padding: 0;margin: 0;}
+.goods_top{
+    border:2px solid white;
+    border-bottom-color: #2abbb4;
+    font-size: 24px;
+    height: 69px;
+}
+.goods_top img{
+
+    margin-left: 30px;
+    margin-top: 37px;
+    margin-right: 19px;  
+
+}
+.div_img{
+    float: left;
+    /* margin-left: 371px; */
+    margin-top: 126px;
+}
+.div_tab{
+    float: left;
+    
+    margin-top: 126px;
+    margin-left: 80px;
+    /* border: 1px solid red; */
+}
+tr{
+    height: 70px;
+}
+td{
+    width: 130px;
+    font-size: 17px;
+}
+.div_tab input[type="button"]{
+    width: 102px;
+    height: 32px;
+    background-color: #2abbb4;
+    border: 1px solid #2abbb4;
+    font-size: 20px;
+    color: white;
+    border-radius: 50px;
+    outline: none;
+}
+.good_content img{
+    width: 460px;
+    height: 460px;
+    margin:auto;
+}
+.threebut input[type="button"]{
+    width: 102px;
+    height: 41px;
+
+    border: 1px solid #2abbb4;
+    font-size: 20px;
+    outline: none;
+    margin-right: 0px;
+    float: left;
+    border-bottom: 0px;
+}
+.good_bottom{
+    width: 100%;
+    /* border: 1px solid red; */
+
+    margin-top: 85px !important;
+}
+.divpingjia{
+    width: 948px;
+    border: 1px solid #999999;
+    margin-top: 40px;
+    padding-bottom: 30px;
+    box-sizing: border-box;
+
+}
+.name1tou{
+    float: left;
+    margin-top: 19px;
+    margin-left: 25px;
+    margin-bottom: 15px;
+}
+
+.name1{
+    float: left;
+    width: 90px;
+    height: 55px;
+    margin-top: 20px;
+    margin-left: 10px;
+}
+.huifu_but{
+    float: left;
+    margin-left: 342px;
+    margin-top: 42px;
+}
+.huifu_but input{
+    width: 57px;
+    height: 26px;
+    border-radius: 5px;
+    outline: none;
+    background-color: #2abbb4;
+    color: white;
+    border: 1px solid #2abbb4;
+}
+.divpingjia span{
+    margin-top: 150px;
+}
+.pingjia_bottom{
+    /* border: 1px solid red; */
+    margin-top: 85px;
+    margin-left: 25px;
+}
+.threebut_active{
+    color: white;
+    background-color:#2abbb4;
+}
+
+
+/*huiq*/
+.evaluationList-list-answer{
+    width:100%;
+}
+.evaluationList-list-answer-top{
+    width: 0;
+    height: 0;
+    margin-left: 36px;
+    border-right: 27px solid transparent;
+    border-bottom: 27px solid #fff8e5;
+    border-left: 27px solid transparent;
+}
+.evaluationList-list-answer-text{
+    width:562px;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: #fff8e5;
+    font-size: 26px;
+}
+.canshu_info {
+	width: 100%;
+	display: block;
+	overflow: hidden;
+	margin-top: 20px;
+	
+}
+.canshu_info div {width: 30.33%;margin-left: 3%;float: left;line-height: 30px;height: 30px;font-size: 16px;color: #666;margin-top: 10px;}
+.canshu_info div span {
+    height: 30px;
+    width: 78px;
+    margin-right: 10px;
+    background-color: #2abbb4;
+    float: left;
+    margin-top: 0px;
+    text-align: center;
+    border: 1px solid #2abbb4;
+    font-size: 16px;
+    color: white;
+    border-radius: 50px;
+}
+.con_con {
+	width: 94%;
+	display: block;
+	line-height: 30px;
+	font-size: 16px;
+	color: #666;
+	overflow: hidden;
+	margin-left: 3%;
+	margin-top: 30px;
+	
+}
+.con_con img {width: 100%;}

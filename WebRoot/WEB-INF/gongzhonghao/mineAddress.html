@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/air.css" />
+		<title>我的地址</title>
+	</head>
+
+	<body class="bgcGray">
+		<header class="header">
+			<a href="javascript:history.back()"><img src="img/icon_back@2x.png" /></a>
+			<center>我的地址</center>
+		</header>
+		<div class="orderCon mT6">
+			<section class="orderBox mT0">
+				<p class="margin05">
+					<a href="mineAddressSet.html">设置默认地址<img src="img/icon_in@2x.png" class="fr littlePic" /></a>
+				</p>
+				<div class="orderInfo bB0">
+					<section>
+						<img src="img/icon_address@2x.png" class="littlePic" />
+						<div class="addr">
+							<p>收货人：<span>阿三地方</span>
+								<font class="fr">18493938476</font>
+							</p>
+							<p>收货地址：是的封建历史交锋历史记录的副教授解放拉萨解放拉屎的浪费</p>
+						</div>
+						<img src="img/icon_in@2x.png" alt="" class="littlePic" />
+						<aside align="right">
+							<a class="redFont" href="mineAddressEdit.html">编辑</a>
+							<span class="redFont marginLR05 delete">删除</span>
+						</aside>
+					</section>
+				</div>
+
+			</section>
+		</div>
+		<article class="layer"></article>
+		<div class="pop">
+			<center>确认删除？</center>
+			<input class="grayBtn w6" type="submit" value="取消" />
+			<input class="greenBtn w6" type="submit" value="确定" />
+		</div>
+		<script type="text/javascript">
+			var del = document.querySelector(".delete"),
+				layer = document.querySelector(".layer"),
+				pop = document.querySelector(".pop"),
+				ipts = pop.getElementsByTagName("input");
+			del.onclick = function() {
+				layer.style.display = "block";
+				pop.style.display = 'block';
+			}
+			for(var ipt of ipts) {
+				ipt.onclick = function() {
+					layer.style.display = "none";
+					pop.style.display = 'none';
+				}
+			}
+		</script>
+	</body>
+
+</html>

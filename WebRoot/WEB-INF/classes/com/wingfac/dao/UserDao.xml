@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.UserDao">
+	<parameterMap type="Map" id="ccc">
+		<parameter property="au_id" javaType="String"/>
+		<parameter property="nickname" javaType="String"/>
+	</parameterMap>
+
+	<select id="findUser" parameterType="Map" resultType="Map">
+		select * 
+		from user
+		limit #{page},10 
+	</select>
+	
+	<select id="countAllUsers" resultType="int">
+		select count(*)
+		from user
+	</select>
+	
+	<select id="getByOpenid"  parameterType="java.lang.String" resultType="com.wingfac.entity.User">
+		select * 
+		from user 
+		where open_id=#{open_id,jdbcType=VARCHAR}
+	</select>
+	
+	<update id="updateUserNicenameMoblieTypeByAuId" parameterType="Map">
+		update user
+		set nickname=#{nickname},mobile =#{mobile},
+		type=#{type}
+		where au_id=#{au_id}
+	</update>
+ 	
+	<select	id="selectUserByauId" parameterType="String" resultType="com.wingfac.entity.User">
+		select *
+		from user
+		where au_id = #{au_id}
+	</select>	
+		
+	<update id="updateUserTypeByAuId" parameterType="String">
+		update user
+		set type = 0
+		where au_id = #{au_id}
+	</update>	
+		
+	<sql id="user_key">
+		<trim suffixOverrides=",">
+			<if test="au_id != null">au_id,</if>
+			<if test="mobile != null">mobile,</if>
+			<if test="password != null">password,</if>
+			<if test="nickname != null">nickname,</if>
+			<if test="headimg != null">headimg,</if>
+			<if test="create_time != null">create_time,</if>
+			<if test="type != null">type,</if>
+			<if test="score != null">score,</if>
+			<if test="sex != null">sex,</if>
+			<if test="address != null">address,</if>
+			<if test="collection != null">collection,</if>
+			<if test="other != null">other,</if>
+			<if test="pay_password != null">pay_password,</if>
+			<if test="del_flag != null">del_flag,</if>
+			<if test="open_id != null">open_id,</if>
+			<if test="orderstate != null">orderstate,</if>
+		</trim>
+	</sql>	
+	
+	<sql id="user_value">
+		<trim suffixOverrides=",">
+			<if test="au_id != null">#{au_id},</if>
+			<if test="mobile != null">#{mobile},</if>
+			<if test="password != null">#{password},</if>
+			<if test="nickname != null">#{nickname},</if>
+			<if test="headimg != null">#{headimg},</if>
+			<if test="create_time != null">#{create_time},</if>
+			<if test="type != null">#{create_time},</if>
+			<if test="score != null">#{create_time},</if>
+			<if test="sex != null">#{sex},</if>
+			<if test="address != null">#{address},</if>
+			<if test="collection != null">#{collection},</if>
+			<if test="other != null">#{other},</if>
+			<if test="pay_password != null">#{pay_password},</if>
+			<if test="del_flag != null">#{del_flag},</if>
+			<if test="open_id != null">#{open_id},</if>
+			<if test="orderstate != null">#{orderstate},</if>
+		</trim>
+	</sql>
+	
+	
+	
+		
+	<insert id="insertUser" parameterType="Map">
+		insert into user (<include refid="user_key"/>) values (<include refid="user_value"/>)
+	</insert>	
+	
+	<update id="updateUserInformation" parameterType="Map">
+		update user
+		set nickname=#{nickname},mobile=#{mobile},sex=#{sex},headimg=#{headimg}
+		where open_id=#{open_id}
+	</update>	
+	
+	<insert id="addNewAddressByUser" parameterType="Map">
+		insert into address
+		(a_id,au_id,name,mobile,province,detail,create_time)
+		value
+		(#{a_id},#{au_id},#{name},#{mobile},#{province},#{detail},#{create_time})
+	</insert>
+	
+	<select id="selectAddressByAuId" parameterType="String" resultType="com.wingfac.entity.Address">
+		select *
+		from address
+		where au_id=#{au_id}
+		order by create_time desc
+	</select>
+	
+	<update id="updateAddressByAId" parameterType="Map">
+		update address
+		set name=#{name},mobile=#{mobile},province=#{province},detail=#{detail}
+		where a_id=#{a_id}
+	</update>
+	
+	<select id="getAddressInformationByAId" parameterType="String" resultType="com.wingfac.entity.Address">
+		select *
+		from address
+		where a_id=#{a_id}
+	</select>
+	
+	<update id="updateUserDefaulAddress" parameterType="String">
+		update user
+		set address=#{address}
+		where au_id=#{au_id}
+	</update>
+	
+	<delete id="deleteAddressByAId" parameterType="String">
+		delete 
+		from address
+		where a_id=#{a_id}
+	</delete>
+	
+	<select id="selectUserOpenIdByOpenId" parameterType="String" resultType="String">
+		select open_id 
+		from user
+		where open_id=#{open_id}
+	</select>
+	
+	<select id="selectUserCommodityOrderByUserId" parameterType="Map" resultType="Map">
+		select *
+		from commodity_order com
+		inner join user u
+ 		on u.au_id=com.au_id
+ 		inner join commodity c
+ 		on com.c_id=c.c_id
+		where u.au_id=#{au_id}
+		limit #{page},5  
+	</select>
+	
+	<select id="selectCountCommodityOrderByUserId" resultType="int" parameterType="Map">
+		select count(*)
+		from commodity_order com
+		inner join user u
+ 		on u.au_id=com.au_id
+ 		inner join commodity c
+ 		on com.c_id=c.c_id
+		where u.au_id=#{au_id}
+	</select>
+	
+	<select id="selectUserInstallOrderByUserId" parameterType="Map" resultType="Map">
+		select *
+		from install_order 
+		inner join user 
+ 		on user.au_id=install_order.au_id
+ 		inner join install 
+ 		on install.install_id=install_order.install_id
+		where user.au_id=#{au_id}
+		limit #{page},5 
+	</select>
+	
+	<select id="selectCountInstallOrderByUserId" parameterType="String" resultType="int">
+		select count(*)
+		from install_order 
+		inner join user 
+ 		on user.au_id=install_order.au_id
+ 		inner join install 
+ 		on install.install_id=install_order.install_id
+		where user.au_id=#{au_id}
+	</select>
+	
+	<select id="getUserOrderStateWait" resultType="com.wingfac.entity.User" parameterType="int">
+		select *
+		from user
+		where user.type=1
+		or user.type=2
+		or user.type=3
+		or user.type=100
+		and user.orderstate=0
+		or user.orderstate=1
+		limit #{page},5
+	</select>
+	
+	<select id="CountUserOrderstateWait" resultType="int">
+		select count(*)
+		from user
+		where user.type=1
+		or user.type=2
+		or user.type=3
+		or user.type=100
+		and user.orderstate=0
+		or user.orderstate=1
+	</select>
+	
+	<update id="updateUserOrderStatePass" parameterType="String">
+		update user
+		set orderstate=2
+		where au_id=#{au_id}
+	</update>
+	
+	<update id="updateUserOrderStateRefuse" parameterType="String">
+		update user
+		set orderstate=1
+		where au_id=#{au_id}
+	</update>
+	
+	<delete id="deleteUserByUserId" parameterType="String">
+		delete from
+		user
+		where au_id=#{au_id}
+	</delete>
+	
+	<select id="selectAllSaler" resultType="com.wingfac.entity.User">
+		select *
+		from user
+		where type=1
+		and orderstate=2
+		limit #{page},10
+	</select>
+	
+	<select id="selectCountAllSaler" resultType="int">
+		select count(*)
+		from user
+		where type=1
+		and orderstate=2
+	</select>
+	
+	<update id="closeSalerOrderstateAndType" parameterType="String">
+		update user
+		set orderstate=1, type=0
+		where au_id=#{au_id}
+	</update>
+	
+	<select id="selectAllRepairWorker" parameterType="Map" resultType="Map">
+		select *
+		from user
+		where type=2
+		and orderstate=2
+		limit #{page},10
+	</select>
+	
+	<select id="CountAllRepairWorker" resultType="int">
+		select count(*)
+		from user
+		where type=2
+		and orderstate=2
+	</select>
+	
+	<select id="selectKeywordsInNickname" parameterType="String" resultType="Map">
+		select * 
+		from user
+		where 
+		nickname like #{keywords}
+	</select>
+	
+	<select id="getUserType3" resultType="com.wingfac.entity.User" parameterType="Map">
+		select *
+		from user
+		where type=3
+		limit #{page},10
+	</select>
+	
+	<select id="getCountUserType3" resultType="int">
+		select count(*)
+		from user
+		where type=3
+	</select>
+	
+	<select id="selectUserMobileVague" parameterType="String" resultType="Map">
+		select * 
+		from user
+		where mobile like #{keyword}
+	</select>
+	
+	<sql id="key">
+      <trim suffixOverrides=","><!-- 去除多余后缀 -->
+        <if test="a_id != null">
+            a_id,
+        </if>
+        <if test="au_id != null">
+            au_id,
+        </if>
+        <if test="name != null">
+            name,
+        </if>
+        <if test="mobile != null">
+            mobile,
+        </if>
+        <if test="province != null">
+            province,
+        </if>
+        <if test="detail != null">
+            detail ,
+        </if>
+        <if test="create_time  != null">
+            create_time,
+        </if>
+      </trim>
+   	</sql>
+	
+	<sql id="value">
+      <trim suffixOverrides=",">
+        <if test="a_id != null">
+            #{a_id},
+        </if>
+         <if test="au_id != null">
+            #{au_id},
+        </if>
+         <if test="name != null">
+            #{name},
+        </if>
+         <if test="mobile != null">
+            #{mobile},
+        </if>
+         <if test="province != null">
+            #{province},
+        </if>
+         <if test="detail != null">
+            #{detail},
+        </if>
+         <if test="create_time != null">
+            #{create_time},
+        </if>
+      </trim>
+    </sql>
+	
+	<insert id="insertAddress" parameterType="Map">
+	 insert into address(<include refid="key"/>) values(<include refid="value"/>);
+	</insert>
+	
+	<update id="updateUserAddressByAuId" parameterType="Map">
+		update user
+		set address =#{address}
+		where au_id=#{au_id}
+	</update>
+	
+	<update id="updateUserType0" parameterType="String">
+		update user
+		set type=0
+		where au_id=#{au_id}
+	</update>
+	
+	<select id="findNewAddressPersonal" parameterType="String" resultType="Map">
+		select *
+		from address 
+		where au_id=#{au_id}
+		order by create_time 
+		desc
+		limit 0,1
+	</select>
+	
+	<select id="checkUserInformation" parameterType="String" resultType="String">
+		select au_id
+		from user
+		where mobile=#{mobile}
+		and
+		password=#{password}
+	</select>
+	
+	<select id="selectALLSalemanAndJiShu" resultType="Map">
+		select *
+		from user
+		where type=1
+		or type=2
+	</select>
+
+
+
+
+
+
+</mapper>
+<!-- ,nickname,mobile,type,other -->
+<!-- ,#{nickname},#{mobile},#{type},#{other} -->

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/air.css" />
+		<title>问答详情</title>
+		<style type="text/css">
+			body {
+				background-color: #f6f6f6;
+			}
+			
+			.header {
+				position: fixed;
+				border-bottom: 0;
+				background-color: #f6f6f6;
+			}
+			
+			.orderCon {
+				background-color: #f6f6f6;
+			}
+			
+			.orderCon .orderBox {
+				padding: 1rem;
+			}
+			
+			.userInfo b {
+				display: inline-block;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="header">
+			<a href="javascript:history.back()"><img src="img/icon_back@2x.png" class="littlePic" /></a>
+			<center>问答详情</center>
+		</header>
+		<nav class="askCommodity clearfix">
+			<a href="commodityDetail.html"><img src="img/img_detal@2x.png" />
+				<font id="cName"></font>
+				<img src="img/icon_in@2x.png" alt="" class="littlePic fr" /></a>
+		</nav>
+		<div class="orderCon">>
+			<section class="askCon">
+				<h3 class="ask"><i class="littleWords">问</i></h3>
+				<p class="margin05"><span class="font888 littleWords">提问于<time class="font888" id="askTime"></time></span></p>
+				<!--<article class="askBox clearfix">
+					<div class="userInfo">
+						<img src="img/img_detail_user@2x.png" />
+						<span>
+							<p><b class="nickname">老虎</b> <font class="blueBgc littleWords">已买</font></p>
+							<time class="font888">2018-01-01</time>
+						</span>
+					</div>
+					<p class="answer">是两地分居拉萨是离开多三联单看法四大佛教历史地理空间是两地分居拉萨是离开多三联单看法四大佛教历史地理空间是两地分居拉萨是离开多三联单看法四大佛教历史地理空间</p>
+					<span class="useful">
+						<i class="triWhite"></i>
+						有用
+					</span>
+				</article>-->
+			</section>
+		</div>
+		<footer class="footer">
+			<input type="text" placeholder="输入您的回答" />
+			<input type="submit" value="发送" />
+		</footer>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var search = location.search.slice(1).split('?'),
+				params = search.toString().split("&");
+				askId = params[0].toString().split('=')[1];
+				askContent = decodeURI(params[1].split('=')[1]),
+				askTime = decodeURI(params[2].split('=')[1]);
+			console.log(askId);
+			console.log(askContent);
+			console.log(askTime);
+			$(".ask").html('<i class="littleWords">问</i>' + askContent);
+			$("#askTime").html(askTime);
+			var method = {
+				//设置cookie
+				setCookie: function(c_name, value, expiredays) {
+					var exdate = new Date()
+					exdate.setTime(Number(exdate.getTime()) + Number(expiredays))
+					document.cookie = c_name + "=" + escape(value) +
+						((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+				},
+				//获取cookie
+				getCookie: function(c_name) {
+					if(document.cookie.length > 0) {
+						c_start = document.cookie.indexOf(c_name + "=")
+						if(c_start != -1) {
+							c_start = c_start + c_name.length + 1
+							c_end = document.cookie.indexOf(";", c_start)
+							if(c_end == -1) c_end = document.cookie.length
+							return unescape(document.cookie.substring(c_start, c_end))
+						}
+					}
+					return ""
+				}
+			}
+			var cName = method.getCookie("cName");
+			$("#cName").html(cName);
+
+			const URL2 = 'http://www.kongtiaoguanjia.com/air/CommonController/addCommodityAnswerByAskId.do';
+			function getJson2(askId) { /*获取回答*/
+				$.ajax({
+					type: "post",
+					url: 'http://www.kongtiaoguanjia.com/air/CommonController/addCommodityAnswerByAskId.do',
+					async: false,
+					dataType: "json",
+					data: {
+						'askId': askId,
+						'openId': 123123
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '';
+						for(var i = 0, item; item = data.object[i++];) {
+//							console.log(item);	
+							var millisecond=new Date(item.create_time);
+							var createTime=millisecond.toLocaleDateString();
+							str += `
+							<article class="askBox clearfix">
+								<div class="userInfo">
+									<img src="img/img_detail_user@2x.png" />
+									<span>
+										<p><b class="nickname">${item.nickname}</b> <font class="blueBgc littleWords">已买</font></p>
+										<time class="font888">${createTime}</time>
+									</span>
+								</div>
+								<p class="answer">${item.answer_content}</p>
+								<span class="useful" id="${item.answer_id}">
+									<i class="triWhite"></i>
+									有用
+									<font class="likeNum"></font>
+								</span>
+							</article>
+							`;
+						}
+						$('.askCon').append(str);
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+			getJson2(askId);
+		
+			var likeNum;
+			function like(answerId){			/*点赞*/
+				$.ajax({
+					type: "post",
+					url: 'http://www.kongtiaoguanjia.com/air/CommonController/addUserfulMarkByAnswerId.do',
+					async: false,
+					dataType: "json",
+					data: {
+						'answerId': answerId,
+						'openId': 222
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						return likeNum=data.object;
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+			$(".useful").live("click",function(){
+				$(this).find("i").removeClass("triWhite").addClass("triGreen");
+				var answerId=$(this).attr("id");
+				like(answerId);
+				$(this).find("font").html(likeNum);
+			})
+			
+		</script>
+	</body>
+
+</html>

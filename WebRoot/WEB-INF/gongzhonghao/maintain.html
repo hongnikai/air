@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<title>我要保养</title>
+	</head>
+
+	<body>
+		<header class="header">
+			<a href="javascript:history.back()"><img src="../img/icon_back@2x.png" /></a>
+			<center>我要保养</center>
+		</header>
+		<ul class="installList mT5">
+			<li class="airBrand">
+				<h3>空调品牌</h3>
+				<span onclick="fun_brand('美的')">美的</span>
+				<span class="installAct" onclick="fun_brand('格力')">格力</span>
+				<span onclick="fun_brand('大金')">大金</span>
+				<span onclick="fun_brand('奥克斯')">奥克斯</span>
+			</li>
+			<li class="airUse">
+				<h3>空调用途</h3>
+				<span class="installAct" onclick="fun_purpose(0)">家用分体式</span>
+				<span onclick="fun_purpose(1)">家用分体式</span>
+				<span onclick="fun_purpose(2)">家用分体式</span>
+			</li>
+			<li class="airType">
+				<h3>空调类型</h3>
+				<span class="installAct" onclick="fun_type(0)">挂机</span>
+				<span onclick="fun_type(1)">柜机</span>
+				<span onclick="fun_type(2)">天井机</span>
+			</li>
+			<li class="lmx">
+				<h3>匹数</h3>
+				<span class="installAct" onclick="fun_level('1匹')">1匹</span>
+				<span onclick="fun_level('小1.5匹')">小1.5匹</span>
+				<span onclick="fun_level('1.5匹')">1.5匹</span>
+				<span onclick="fun_level('2匹')">2匹</span>
+				<span onclick="fun_level('2.5匹')">2.5匹</span>
+				<span onclick="fun_level('3匹')">3匹</span>
+				<span onclick="fun_level('10匹')">10匹</span>
+			</li>
+		</ul>
+		<form action="../MaintainController/createMaintainAndTarget.do">
+		<input id="brand" type="text" value="格力"  name="brand" style="display: none;"/>
+		<input id="purpose" type="text" value="0" name="purpose" style="display: none;"/>
+		<input id="type" type="text" value="0" name="type" style="display: none;"/>
+		<input id="level" type="text" value="1匹" name="level" required="required" style="display: none;"/>
+		<input type="submit" class="longBtn" value="下一步" />
+		</form>
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			$('.installList li span').click(function(){
+				$(this).addClass('installAct').siblings().removeClass('installAct');
+			})
+		</script>
+	</body>
+</html>
+<script type="text/javascript">
+function fun_brand(data){
+	$("#brand").val(data);
+}
+function fun_purpose(data){
+	$("#purpose").val(data);
+}
+function fun_type(data){
+	$("#type").val(data);
+}
+function fun_level(data){
+	$("#level").val(data);
+}
+</script>

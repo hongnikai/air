@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/air.css" />
+		<title>我的订单</title>
+	</head>
+
+	<body class="bgcGray">
+		<header class="header">
+			<a href="javascript:history.back()"><img src="img/icon_back@2x.png" /></a>
+			<center>我的订单</center>
+		</header>
+		<nav class="orderNav">
+			<span>全部</span>
+			<span class="navAct">待付款</span>
+			<span>未完成</span>
+			<span>已完成</span>
+		</nav>
+		<div class="orderCon mT9">
+			<!--<section class="orderBox">
+				<p class="margin05"><span class="greenFont">01.单号XXXXXXXXX</span>
+					<span class="greenFont fr">未完成</span>
+				</p>
+				<div class="orderInfo">
+					<img src="img/img_home_bytc@2x.png" alt="商品图片" />
+					<article>
+						<h4>标题啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</h4>
+						<small>XX款</small>
+						<p>
+							<font class="redFont">￥50000</font>
+							<i class="fr greenFont">X1</i>
+						</p>
+					</article>
+				</div>
+				<p class="margin05">
+					<span>共<i>1</i>件商品 合计：<font class="redFont">￥5000</font></span>
+					<span class="fr">剩余尾款：<font class="redFont">￥5000</font></span>
+				</p>
+				<p class="clearfix">
+					<a href="" class="whiteBtn fr">支付尾款</a>
+				</p>
+			</section>
+			<section class="orderBox">
+				<p class="margin05"><span class="greenFont">01.单号XXXXXXXXX</span>
+					<span class="greenFont fr">未完成</span>
+				</p>
+				<div class="orderInfo">
+					<img src="img/img_home_bytc@2x.png" alt="商品图片" />
+					<article>
+						<h4>标题啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</h4>
+						<small>XX款</small>
+						<p>
+							<font class="redFont">￥50000</font>
+							<i class="fr greenFont">X1</i>
+						</p>
+					</article>
+				</div>
+				<p class="margin05">
+					<span>共<i>1</i>件商品 合计：<font class="redFont">￥5000</font></span>
+					<span class="fr">剩余尾款：<font class="redFont">￥5000</font></span>
+				</p>
+				<p class=" clearfix">
+					<a href="" class="whiteBtn fr">我要安装</a>
+					<a href="" class="whiteBtn fr">立即评价	</a>
+				</p>
+			</section>
+			<section class="orderBox">
+				<p class="margin05"><span class="greenFont">01.单号XXXXXXXXX</span>
+					<span class="greenFont fr">未完成</span>
+				</p>
+				<div class="orderInfo">
+					<img src="img/img_home_bytc@2x.png" alt="商品图片" />
+					<article>
+						<h4>标题啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</h4>
+						<small>XX款</small>
+						<p>
+							<font class="redFont">￥50000</font>
+							<i class="fr greenFont">X1</i>
+						</p>
+					</article>
+				</div>
+				<p class="margin05">
+					<span>共<i>1</i>件商品 合计：<font class="redFont">￥5000</font></span>
+					<span class="fr">剩余尾款：<font class="redFont">￥5000</font></span>
+				</p>
+				<p class="clearfix">
+					<a href="" class="whiteBtn fr">二次评价</a>
+					<a href="" class="grayBtn fr">已安装</a>
+				</p>
+			</section>-->
+		</div>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			const URL2 = 'http://www.kongtiaoguanjia.com/air/CommodityOrderController/selectCommodityOrderByOpenId.do';
+
+			function getJson2() { /*获取数据*/
+				$.ajax({
+					type: "post",
+					url: URL2,
+					async: false,
+					dataType: "json",
+					data: {
+						'openId': 222
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '';
+						for(var i = 0, item; item = data.data.commodity[i++];) {
+							console.log(item);
+							str += `
+								<section class="orderBox" id="${item.com_id}">
+									<p class="margin05"><span class="greenFont">订单号:${item.com_id}</span>
+										<span class="greenFont fr">待付款</span>
+									</p>
+									<div class="orderInfo">
+										<img src="http://www.kongtiaoguanjia.com/${item.cover_picture}" alt="商品图片" />
+										<article>
+											<h4>${item.c_name}</h4>
+											<small>XX款</small>
+											<p>
+												<font class="redFont">￥${item.price}</font>
+												<i class="fr greenFont">X1</i>
+											</p>
+										</article>
+									</div>
+									<p class="margin05">
+										<span>共<i>1</i>件商品 合计：<font class="redFont">￥${item.total_price}</font></span>
+										<span class="fr">剩余尾款：<font class="redFont">￥${item.retainage}</font></span>
+									</p>
+									<p class="clearfix">
+										<a class="whiteBtn fr cancel">取消订单</a>
+										<a href="" class="whiteBtn fr">立即支付</a>
+									</p>
+								</section>
+								`;
+						}
+						$('.orderCon').html(str);
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+			getJson2();
+
+			$(".cancel").live("click", function() { /*取消订单*/
+				var getComId = $(this).parent().parent().attr("id");console.log(getComId)
+				const URL3 = 'http://www.kongtiaoguanjia.com/air/CommodityOrderController/deleteCommodityOrderByComId.do';
+				$.ajax({
+					type: "get",
+					url: URL3,
+					async: false,
+					dataType: "text",
+					data: {
+						'comId': getComId
+					},
+					success: function(data) {
+						console.log("Request successful!");
+
+					},
+					error: function(msg) {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+				getJson2();
+			})
+		</script>
+	</body>
+
+</html>

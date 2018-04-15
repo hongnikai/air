@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/air.css" />
+		<title>验收进度</title>
+	</head>
+
+	<body class="bgcGray">
+		<header class="header">
+			<a href="javascript:history.back()"><img src="img/icon_back@2x.png" /></a>
+			<center>验收进度</center>
+		</header>
+		<div class="orderCon mT6">
+			<section class="orderBox">
+				<p class="fontBig margin05">上门照片</p>
+				<div class="uploadBox">
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+				</div>
+			</section>
+			<section class="orderBox">
+				<p class="fontBig margin05">安装位置确认</p>
+				<div class="uploadBox">
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+				</div>
+			</section>
+			<section class="orderBox">
+				<p class="fontBig margin05">安装确认</p>
+				<div class="uploadBox">
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+					<div class="upload">
+						<i class="removeBtn" onclick="removePic(this)"></i>
+						<img src="img/icon_ys_photo@2x.png" />
+						<input type="file" onchange="uploadPic(this)" />
+					</div>
+				</div>
+			</section>
+			<input type="submit" value="提交给客户" class="longBtn" />
+		</div>
+		<script type="text/javascript">
+			//			var upload=document.getElementsByClassName("upload");
+			//			var w=upload.offsetWidth;console.log(w)
+			//			upload.style.height=w;
+			function uploadPic(obj) {
+				var file = obj.files[0],
+					imgSrc = obj.value,
+					url = URL.createObjectURL(file);
+				if(!/\.(jpg|jpeg|png|JPG|PNG|JPEG)$/.test(imgSrc)) {
+					alert("请上传jpg或png格式的图片！");
+					return false;
+				} else {
+					obj.previousElementSibling.src = url;
+				}
+			}
+
+			function removePic(obj) {
+				//				var html=[];
+				//				var upload='<div class="upload">'+
+				//						'<i class="removeBtn" onclick="removePic(this)"></i>'+
+				//						'<img src="img/icon_ys_photo@2x.png" />'+
+				//						'<input type="file" onchange="uploadPic(this)" /></div>';
+				//						html.push(upload);
+				var upload = document.createElement("div");
+				upload.className = "upload";
+				upload.style.marginLeft = 0.3 + "rem";
+				upload.innerHTML = '<i class="removeBtn" onclick="removePic(this)"></i>' +
+					'<img src="img/icon_ys_photo@2x.png" />' +
+					'<input type="file" onchange="uploadPic(this)" />';
+				obj.parentElement.parentElement.appendChild(upload);
+				obj.parentElement.parentElement.removeChild(obj.parentElement);
+			}
+		</script>
+	</body>
+
+</html>

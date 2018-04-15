@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<title>设置</title>
+	</head>
+
+	<body class="bgcGray">
+		<header class="header">
+			<a href="javascript:history.back()"><img src="../img/icon_back@2x.png" class="littlePic"/></a>
+			<center>设置</center>
+		</header>
+		<div class="orderCon mT6">
+			<ul class="setList">
+				<a href="">
+					<li>关于我们 <img src="../img/icon_in@2x.png" class="fr littlePic"/></li>
+				</a>
+				<a onclick="check()">
+					<li>退出员工组 <img src="../img/icon_in@2x.png" class="fr littlePic"/></li>
+				</a>
+			</ul>
+		</div>
+	</body>
+
+</html>
+<script type="text/javascript">
+function check(){
+	var a=confirm("真的要推迟吗");
+	if(a==true){
+		window.location.href="../userController/changUserType0.do";
+	}else{
+		alert("感谢您的留下");
+	}
+	
+}
+</script>

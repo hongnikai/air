@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<title>商品详情</title>
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<style type="text/css">
+			body {
+				padding-bottom: 4rem;
+			}
+			
+			footer {
+				height: 4rem;
+			}
+		</style>
+	</head>
+
+	<body>
+		<a style="position: absolute;margin: 1rem;" href="javascript:history.back()"><img src="../img/icon_backcircle@2x.png" style="width: 2.5rem" /></a>
+		<img src="../img/img_detal@2x.png" class="detailPic" />
+		<section class="commodityIntro padding1">
+			<p id="commodityDetails"></p>
+			<font class="redFont" id="unitPrice"></font>
+			<span class="yellowBgc littleWords">有货</span>
+			<span class="grayBgc littleWords">缺货</span>
+		</section>
+		<p class="padding1 borderTB">参数 <img src="../img/icon_in@2x.png" class="fr littlePic para" /></p>
+		<section class="commodityEvaluate padding1">
+			<div class="userInfo">
+				<img src="../img/img_detail_user@2x.png" />
+				<span>
+					<b class="nickname">老虎</b>
+					<time class="font888">2018-01-01</time>
+				</span>
+			</div>
+			<p>撒赖打开解放拉萨角度三联单看法就拉上的解放螺丝钉解放拉萨的就flask的浪费撒赖打开解放拉萨角度三联单看法就拉上的解放螺丝钉解放拉萨的就flask的浪费</p>
+			<center class="padding1">
+				<a href="cartEvaluateList.html" class="whiteBtn w6">查看更多</a>
+			</center>
+		</section>
+		<section class="commodityQA padding1">
+			<article class="notQA">
+				<p>暂无回答</p>
+				<center class="font888 padding1">
+					<img src="../img/icon_detail_wdj@2x.png" />宝贝好不好，问问已买过的人
+				</center>
+				<center class="padding1">
+					<a href="ask.html" class="whiteBtn w6">去提问</a>
+				</center>
+			</article>
+		</section>
+		<img src="img/img_detal@2x.png" class="detailPic" />
+		<img src="img/img_banner1@2x.png" class="detailPic" />
+		<footer class="footer">
+			<aside class="threeBtns">
+				<a href="">
+					<img src="../img/icon_detail_xsy@2x.png" />销售员
+				</a>
+				<a>
+					<img src="../img/icon_detail_sc@2x.png" />收藏
+				</a>
+				<a href="../targetGongZhongHao/cart.do">
+					<img src="../img/icon_user_gwc@2x.png" />购物车
+				</a>
+			</aside>
+			<aside class="twoBtns">
+				<input type="submit" value="立即购买" class="buyNow" />
+				<input type="button" value="加入购物车" id="addToCart" onclick="addToCart(cId)"/>
+			</aside>
+		</footer>
+		<article class="layer"></article>
+		<div class="paraPopUp">
+			<center>产品参数</center>
+			<ul id="paramsList">
+
+			</ul>
+			<input type="button" value="确定" class="sure" />
+		</div>
+
+		<div class="buyPopUp">
+			<section class="buyInfo">
+				<img src="../img/img_home_bytc@2x.png" />
+				<span>
+						<b class="buyName"></b>
+						<font class="redFont" id="buyPrice">￥0</font>
+					</span>
+			</section>
+			<ul>
+				<li>
+					<font class="buyName"></font>
+					<span class="fr count">
+						<i id="minus">-</i>
+						<i id="num">0</i>
+						<i id="add">+</i>
+					</span>
+				</li>
+			</ul>
+			<p>合计
+				<font class="fr redFont" id="buyTotal">￥0</font>
+			</p>
+			<input type="submit" value="确定" class="sure" />
+		</div>
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/cookie.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			const URL = 'http://www.kongtiaoguanjia.com/air/commodity/selectCommodityByc_id.do';
+			var search = location.search.slice(1).split('?'),
+				cId = search[0].toString().split('=')[1]; /*获取商品id*/
+				console.log(cId);
+
+			function setCookie(name, value, time) { /*存入cookie*/
+					var strsec = getsec(time);
+					var exp = new Date();
+					exp.setTime(exp.getTime() + strsec * 1);
+					document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+				}
+
+				function getsec(str) {
+					console.log(str);
+					var str1 = str.substring(1, str.length) * 1;
+					var str2 = str.substring(0, 1);
+					if(str2 == "s") {
+						return str1 * 1000;
+					} else if(str2 == "h") {
+						return str1 * 60 * 60 * 1000;
+					} else if(str2 == "d") {
+						return str1 * 24 * 60 * 60 * 1000;
+					}
+				}
+			setCookie("cId", cId, "s600");			
+//			console.log(getCookie("cId"))
+
+			function getJson(cId) {
+				$.ajax({
+					type: "post",
+					url: URL,
+					async: true,
+					dataType: "json",
+					data: {
+						'c_id': cId
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '',
+							dataList = data.object;
+						str += `
+						<li><font>上市时间</font><span>${dataList.create_time}</span></li>
+						<li><font>保修日期</font><span>${dataList.repair_time}</span></li>
+						<li><font>内机包装尺寸</font><span>${dataList.insert_pack_size}</span></li>
+						<li><font>内机堆码层数极限</font><span>${dataList.insert_plies_max}</span></li>
+						<li><font>内机毛重</font><span>${dataList.insert_weight}</span></li>
+						<li><font>内机尺寸</font><span>${dataList.insert_size}</span></li>
+						<li><font>制冷功率</font><span>${dataList.cold_power}</span></li>
+						<li><font>制冷量</font><span>${dataList.cold_amount}</span></li>
+						<li><font>外机包装尺寸</font><span>${dataList.out_pack_size}</span></li>
+						<li><font>外机堆码层数极限</font><span>${dataList.out_plies_max}</span></li>
+						<li><font>外机尺寸</font><span>${dataList.out_size}</span></li>
+						<li><font>外机毛重</font><span>${dataList.out_weight}</span></li>
+						<li><font>室内机噪音</font><span>${dataList.indoor_noise}</span></li>
+						<li><font>室外机噪音</font><span>${dataList.outdoor_noise}</span></li>
+						<li><font>智能类型</font><span>${dataList.smart_type}</span></li>
+						<li><font>电辅加热功率</font><span>${dataList.heating_power}</span></li>
+						<li><font>空调面板颜色</font><span>${dataList.air_board_color}</span></li>
+						<li><font>能效备案号</font><span>${dataList.efficiency_number}</span></li>
+						<li><font>空调类型</font><span>${dataList.air_type}</span></li>
+						<li><font>冷暖类型</font><span>${dataList.temperature_type}</span></li>
+						<li><font>空调功率</font><span>${dataList.air_power}</span></li>
+						<li><font>适用面积</font><span>${dataList.suit_area}</span></li>
+						<li><font>售后服务</font><span>${dataList.customer_service}</span></li>
+						<li><font>工作方式</font><span>${dataList.work_method}</span></li>
+						<li><font>能效等级</font><span>${dataList.power_level}</span></li>
+						<li><font>是否循环风量</font><span>${dataList.wind_refresh_yes_or_not}</span></li>
+						<li><font>室外净机重量</font><span>${dataList.out_net_weight}</span></li>
+						<li><font>室内净机重量</font><span>${dataList.insert_net_weight}</span></li>
+						`
+						$('#paramsList').html(str);
+						$('#commodityDetails').html(dataList.commodity_details);
+						$('#unitPrice').html('￥' + dataList.price + '/平方米');
+						$('#buyPrice').html('￥' + dataList.price);
+						$('.buyName').html(dataList.c_name);
+
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+
+			}
+			getJson(cId);
+
+			const URL2 = 'http://www.kongtiaoguanjia.com/air/CommodityOrderController/createCommodity_orderByCommodity.do';
+			function addToCart(cId) {			 /*加入购物车*/
+				$.ajax({
+					type: "post",
+					url: URL2,
+					async: false,
+					dataType: "json",
+					data: {
+						'c_id': cId,
+						'openId': 222
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						$("#addToCart").css("background-color","#DDDDDD").attr("disabled",true);
+						alert("成功加入购物车！");
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+//			addToCart(cId);
+
+			var add = document.getElementById('add'),
+				/*加减*/
+				minus = document.getElementById("minus"),
+				total = 0;
+			add.onclick = function() {
+				var num = Number(this.previousElementSibling.innerHTML);
+				num += 1;
+				this.previousElementSibling.innerHTML = num;
+				total = Number($('#buyPrice').html().slice(1)) * num;
+				$('#buyTotal').html('￥' + total);
+			}
+			minus.onclick = function() {
+				var num = Number(this.nextElementSibling.innerHTML);
+				num -= 1;
+				this.nextElementSibling.innerHTML = num;
+				total = Number($('#buyPrice').html().slice(1)) * num;
+				$('#buyTotal').html('￥' + total);
+				if(num < 0) {
+					this.nextElementSibling.innerHTML = 0;
+					$('#buyTotal').html('￥' + 0);
+				}
+			}
+
+			var layer = document.querySelector(".layer"),
+				paraPopUp = document.querySelector(".paraPopUp"),
+				buyPopUp = document.querySelector(".buyPopUp"),
+				sures = document.querySelectorAll('.sure'),
+				para = document.querySelector(".para"),
+				buyNow = document.querySelector(".buyNow");
+			para.onclick = function() {
+				layer.style.display = "block";
+				paraPopUp.style.display = "block";
+			}
+			buyNow.onclick = function() {
+				layer.style.display = "block";
+				buyPopUp.style.display = "block";
+			}
+			layer.onclick = function() {
+				this.style.display = "none";
+				paraPopUp.style.display = "none";
+				buyPopUp.style.display = "none";
+			}
+			for(var sure of sures) {
+				sure.onclick = function() {
+					layer.style.display = "none";
+					paraPopUp.style.display = "none";
+					buyPopUp.style.display = "none";
+				}
+			}
+		</script>
+	</body>
+
+</html>

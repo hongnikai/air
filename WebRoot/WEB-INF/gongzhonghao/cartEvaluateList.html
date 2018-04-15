@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/air.css" />
+		<title>评价列表</title>
+	</head>
+
+	<body class="bgcGray">
+		<header class="header">
+			<a href="javascript:history.back()"><img src="img/icon_back@2x.png" /></a>
+			<center>评价列表</center>
+		</header>
+		<div class="orderCon mT6">
+			<section class="orderBox padding1">
+				<div class="userInfo">
+					<img src="img/img_detail_user@2x.png" />
+					<span>
+						<b class="nickname">老虎</b>
+						<time class="font888">2018-01-01</time>
+					</span>
+					<tt class="fr"><img class="littlePic" src="img/634132897328110305.png"/>
+					回复</tt>
+				</div>
+				<figure class="picBox">
+					<figcaption class="margin1">好评是领导看见分厘卡三季稻付款了时间地方</figcaption>
+					<img src="img/img_sp@2x.png" />
+					<img src="img/img_home_bytc@2x.png" />
+					<img src="img/img_home_md@2x.png" />
+				</figure>
+				<article class="customerService marginT1 padding1">
+					<p>客服回复：</p>
+					<p>萨勒夫的距离上的交锋历史死定了房间顺利康复就是浪费善良的解放拉萨解放老师看见分列式解放拉萨解放洛杉矶佛鳄叫我</p>
+				</article>
+			</section>
+		</div>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var method = {
+				//设置cookie
+				setCookie: function(c_name, value, expiredays) {
+					var exdate = new Date()
+					exdate.setTime(Number(exdate.getTime()) + Number(expiredays))
+					document.cookie = c_name + "=" + escape(value) +
+						((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+				},
+				//获取cookie
+				getCookie: function(c_name) {
+					if(document.cookie.length > 0) {
+						c_start = document.cookie.indexOf(c_name + "=")
+						if(c_start != -1) {
+							c_start = c_start + c_name.length + 1
+							c_end = document.cookie.indexOf(";", c_start)
+							if(c_end == -1) c_end = document.cookie.length
+							return unescape(document.cookie.substring(c_start, c_end))
+						}
+					}
+					return ""
+				}
+			}
+			var cId = method.getCookie("cId");
+
+			const URL1 = 'http://www.kongtiaoguanjia.com/air/CommonController/submitCommodityOrderBycomId.do';
+
+			function getJson1(cId) { /*获取评价*/
+				$.ajax({
+					type: "post",
+					url: URL1,
+					async: false,
+					dataType: "json",
+					data: {
+						'cId': cId,
+						'openId':222
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '';
+						for(var i = 0, item; item = data.data[i++];) {
+														console.log(item);
+							str += `
+							<section class="orderBox padding1">
+								<div class="userInfo">
+									<img src="img/img_detail_user@2x.png" />
+									<span>
+										<b class="nickname">${item.nickname}</b>
+										<time class="font888">${item.eva_time}</time>
+									</span>
+									<tt class="fr"><img class="littlePic" src="img/634132897328110305.png"/>
+									回复</tt>
+								</div>
+								<figure class="picBox">
+									<figcaption class="margin1">${item.content}</figcaption>
+									<img src="img/img_sp@2x.png" />
+								</figure>
+								<article class="customerService marginT1 padding1">
+									<p>客服回复：</p>
+									<p>${item.reply}</p>
+								</article>
+							</section>
+							`;
+						}
+						$('.orderCon').html(str);
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+						getJson1(cId);
+			//			console.log("askIdArr:" + askIdArr);
+		</script>
+	</body>
+
+</html>

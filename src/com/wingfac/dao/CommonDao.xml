@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.CommonDao">
+	
+	<select id="selectCommodityByKeyWords" parameterType="String" resultType="com.wingfac.entity.Commodity">
+		select * 
+		from commodity
+		where c_name like #{new_keywords}
+	</select>
+	
+	<select id="selectStoreByname" parameterType="String" resultType="com.wingfac.entity.Store">
+		select * 
+		from store
+		where s_name like #{new_keywords}
+	</select>
+	
+	<select id="selectUsefulCountByanswerId" parameterType="String" resultType="Integer"> 
+		select mark
+		from ask_all_answers
+		where answers_id = #{answers_id}
+	</select>
+	
+	<update id="updateUsefulMarkByAnswerId" parameterType="Map">
+		update ask_all_answers
+		set mark = #{mark}
+		where answers_id = #{answers_id}
+	</update>
+	
+	<insert id="createFirstSupport" parameterType="Map">
+		insert into
+		support_record
+		(support_id,au_id,answer_id)
+		value
+		(#{support_id},#{au_id},#{answer_id})
+	</insert>
+	
+	<select id="makeSureFirstSupportOrNot" parameterType="String" resultType="String">
+		select support_id
+		from support_record
+		where au_id = #{au_id}
+		and
+		answer_id = #{answer_id}
+	</select>
+	
+	<select id="getCommodityAskByAskId" parameterType="String" resultType="Map">
+		select * 
+		from commodity_ask
+		where ask_id=#{ask_id}
+	</select>
+	
+	<sql id="ask_key">
+		<trim suffixOverrides=",">
+			<if test="ask_id != null">ask_id,</if>	
+			<if test="c_id != null">c_id,</if>	
+			<if test="au_id != null">au_id,</if>	
+			<if test="question != null">question,</if>	
+			<if test="create_time != null">create_time,</if>	
+		</trim>
+	</sql>
+	
+	<sql id="ask_value">
+		<trim suffixOverrides=",">
+			<if test="ask_id != null">#{ask_id},</if>	
+			<if test="c_id != null">#{c_id},</if>	
+			<if test="au_id != null">#{au_id},</if>	
+			<if test="question != null">#{question},</if>	
+			<if test="create_time != null">#{create_time},</if>	
+		</trim>
+	</sql>
+	
+	<insert id="insertAskAll" parameterType="Map">
+		insert into ask_all (<include refid="ask_key"/>) values(<include refid="ask_value"/>)	
+	</insert>
+	
+	<select id="selectAskAllByAskId" parameterType="String" resultType="Map">
+		select *
+		from ask_all
+		where ask_id=#{ask_id}
+	</select>
+	
+	<select id="selectAnswerByAskId" parameterType="String" resultType="Map">
+		select *
+		from ask_all_answers
+		inner join user
+		on user.au_id=ask_all_answers.au_id
+		where ask_id=#{ask_id}
+	</select>
+	
+	<select id="selectAskAllBycId" parameterType="String" resultType="Map">
+		select *
+		from ask_all
+		where c_id=#{c_id}
+	</select>
+	
+</mapper>

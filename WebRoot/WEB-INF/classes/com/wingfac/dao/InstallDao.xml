@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.InstallDao">
+	
+	<insert id="insertInstall" parameterType="Map">
+		insert into 
+		install
+		(
+		install_id,ins_state,brand,
+		purpose,type,level
+		)
+		values
+		(
+		#{install_id},#{ins_state},#{brand},
+		#{purpose},#{type},#{level}
+		)
+	</insert>
+	
+	<update id="updateTimeByinstallId" parameterType="Map">
+		update install_order
+		set time = #{time}, time_stage =#{time_stage}
+		where install_order_id = #{install_order_id}
+	</update>	
+		
+	<select id="selectInstallOrderByinstallOrderId" parameterType="String" resultType="com.wingfac.entity.InstallOrder">
+		select * 
+		from install_order
+		where install_order_id= #{install_order_id}
+	</select>	
+		
+	<insert id="createInstallOrderByInstall" parameterType="Map" >
+		insert into
+		install_order
+		(install_order_id,install_id,
+		au_id,time,person,tellphone,
+		address,total_price,
+		deposit,retainage,create_time)
+		value
+		(#{install_order_id},#{install_id},
+		#{au_id},#{time},#{person},#{tellphone},
+		#{address},#{total_price},
+		#{deposit},#{retainage},#{create_time})
+	</insert>	
+		
+	<select id="selectInstallOrderByAuId" parameterType="String" resultType="com.wingfac.entity.InstallOrder">
+		select * 
+		from install_order
+		where au_id = #{au_id}
+	</select>
+	
+	<select id="selectInstallByinstall_id" parameterType="String" resultType="com.wingfac.entity.Install">
+		select *
+		from install
+		where install_id=#{install_id}
+	</select>
+	
+	<select id="selectAllInstallOrderNotBuy" resultType="com.wingfac.entity.InstallOrder">
+		select *
+		from install_order
+		where order_state=0
+	</select>
+		
+<!-- 	<select id="selectUserInstallOrderByUserId" parameterType="Map" resultType="Map">
+		select *
+		from install_order 
+		inner join user 
+ 		on user.au_id=install_order.au_id
+ 		inner join install
+ 		on install.install_id=install_order.install_id
+		where user.au_id=#{au_id}
+		limit #{page},5
+	</select>	
+	
+	<select id="selectCountInstallOrderByUserId" parameterType="String" resultType="int">
+		select count(*)
+		from install_order 
+		inner join user 
+ 		on user.au_id=install_order.au_id
+ 		inner join install
+ 		on install.install_id=install_order.install_id
+		where user.au_id=#{au_id}
+	</select> -->	
+	
+	<select id="selectInstallBrandVague" parameterType="String" resultType="Map">
+		select *
+		from install
+		inner join install_order
+		on install.install_id = install_order.install_id
+		where install.brand like #{keyword}
+	</select>
+	
+	
+		
+		<sql id="install_key">
+		 <trim suffixOverrides=",">
+		 <if test="install_order_id !=null">
+		 	install_order_id,
+		 </if>
+		 <if test="install_id !=null">
+		 	install_id,
+		 </if>
+		 <if test="au_id !=null">
+		 	au_id,
+		 </if>
+		 <if test="time !=null">
+		 	time,
+		 </if>
+		 <if test="person !=null">
+		 	person,
+		 </if>
+		 <if test="tellphone !=null">
+		 	tellphone,
+		 </if>
+		 <if test="address !=null">
+		 	address,
+		 </if>
+		 <if test="total_price !=null">
+		 	total_price,
+		 </if>
+		  <if test="deposit !=null">
+		 	deposit,
+		 </if>
+		  <if test="retainage !=null">
+		 	retainage,
+		 </if>
+		  <if test="time_stage !=null">
+		 	time_stage,
+		 </if>
+		  <if test="create_time !=null">
+		 	create_time,
+		 </if>
+		 <if test="order_state !=null">
+		 	order_state,
+		 </if>
+		 <if test="install_man_id !=null">
+			install_man_id,
+		 </if>
+		 <if test="go_indoor_picture != null">
+		 	go_indoor_picture,
+		 </if>
+		 <if test="area_pictrue != null">
+		 	area_pictrue,
+		 </if>
+		 <if test="make_sure_picture != null">
+		 	make_sure_picture,
+		 </if>
+		 </trim>
+		</sql>		
+	
+	
+	
+		<sql id="install_value">
+		<trim suffixOverrides=",">
+		<if test="install_order_id !=null">
+		 	#{install_order_id},
+		 </if>
+		 <if test="install_id !=null">
+		 	#{install_id},
+		 </if>
+		 <if test="au_id !=null">
+		 	#{au_id},
+		 </if>
+		 <if test="time !=null">
+		 	#{time},
+		 </if>
+		 <if test="person !=null">
+		 	#{person},
+		 </if>
+		 <if test="tellphone !=null">
+		 	#{tellphone},
+		 </if>
+		 <if test="address !=null">
+		 	#{address},
+		 </if>
+		 <if test="total_price !=null">
+		 	#{total_price},
+		 </if>
+		  <if test="deposit !=null">
+		 	#{deposit},
+		 </if>
+		  <if test="retainage !=null">
+		 	#{retainage},
+		 </if>
+		  <if test="time_stage !=null">
+		 	#{time_stage},
+		 </if>
+		  <if test="create_time !=null">
+		 	#{create_time},
+		 </if>
+		 <if test="order_state !=null">
+		 	#{order_state},
+		 </if>
+		 <if test="install_man_id != null">
+		 	#{install_man_id},
+		 </if>
+		 <if test="go_indoor_picture != null">
+		 	#{go_indoor_picture},
+		 </if>
+		 <if test="area_pictrue != null">
+		 	#{area_pictrue},
+		 </if>
+		 <if test="make_sure_picture != null">
+		 	#{make_sure_picture},
+		 </if>
+		</trim>		
+		</sql>
+		
+	<insert id="createInstallOrder" parameterType="Map">
+		insert into install_order(<include refid="install_key"/>) values(<include refid="install_value"/>)
+	</insert>
+	
+	<update id="updateInstallOrderAddressInformation" parameterType="Map">
+		update install_order
+		<set>
+		<if test="person !=null">
+		person=#{person}
+		</if>
+		<if test="address !=null">
+		address=#{address}
+		</if>		
+		<if test="tellphone !=null">
+		tellphone=#{tellphone}
+		</if>
+		<if test="total_price !=null">
+		total_price=#{total_price}
+		</if>	
+		</set>
+		where install_order_id=#{install_order_id}
+	</update>
+	
+	<select id="selectTheNearestInstallOrderByAu_id" parameterType="String" resultType="Map">
+		select *
+		from install_order
+		where au_id=#{au_id}
+		order by create_time
+		desc
+		limit 0,1
+	</select>
+	
+	<update id="updateAddressInformation" parameterType="Map">
+		update address
+		<set>
+		<trim suffixOverrides=",">
+		<if test="name !=null">
+			name=#{name},
+		</if>
+		<if test="mobile !=null">
+			mobile=#{mobile},
+		</if>
+		<if test="province !=null">
+			province=#{province},
+		</if>			
+		<if test="detail !=null">
+			detail=#{detail},
+		</if>		
+		<if test="create_time !=null">
+			create_time=#{create_time},
+		</if>	
+		</trim>
+		</set>
+		where a_id=#{a_id}				
+	</update>
+
+	<select id="selectInstallOrderByInstall_idLimit1" parameterType="String" resultType="Map">
+		select * 
+		from install_order
+		where install_id=#{install_id}
+		order by create_time
+		desc
+		limit 0,1
+	</select>
+
+	<delete id="deleteInstallOrderByInstallOrderId" parameterType="String">
+		delete
+		from install_order
+		where install_order_id=#{install_order_id}
+	</delete>
+
+	<select id="selectAllMyInstallOrders" parameterType="String" resultType="Map">
+		select *
+		from install_order
+		inner join install
+		on install_order.install_id=install.install_id
+		inner join user
+		on user.au_id=install_order.au_id
+		where install_order.au_id=#{au_id}
+	</select>
+	
+	<select id="selectAllMyInstallOrder_state0" parameterType="String" resultType="Map"> 
+		select *
+		from install_order
+		inner join install
+		on install_order.install_id=install.install_id
+		inner join user
+		on user.au_id=install_order.au_id
+		where install_order.au_id=#{au_id}
+		and order_state=0
+	</select>
+	
+	<select id="selectAllMyInstallOrder_state1" parameterType="String" resultType="Map">
+		select *
+		from install_order
+		inner join install
+		on install_order.install_id=install.install_id
+		inner join user
+		on user.au_id=install_order.au_id
+		where install_order.au_id=#{au_id}
+		and order_state=1
+	</select>
+	
+	<update id="updateInstallOrderState1" parameterType="String">
+		update install_order
+		set order_state=1
+		where install_order_id=#{install_order_id}
+	</update>
+	
+	<select id="selectInstallOrderPay" resultType="Map">
+		select *
+		from install_order
+		inner join install
+		on install_order.install_id=install.install_id
+		inner join user
+		on user.au_id=install_order.au_id
+		where install_order.order_state=1   <!-- 1为已支付：如果被技术员接单，技术单状态改为4567 -->
+		and install_man_id='0'				<!--  -->
+	</select>
+	
+	<select id="selectInstallByInstallOrder_id" parameterType="String" resultType="Map">
+		select *
+		from install
+		where install_id=#{install_id}
+	</select>
+
+	<select id="selectInstallOrder4" parameterType="String" resultType="Map">
+		select *
+		from install_order
+		inner join install
+		on install_order.install_id=install.install_id
+		inner join user
+		on user.au_id=install_order.au_id
+		where install_order.order_state=4
+		and install_man_id=#{install_man_id}
+	</select>
+
+	<update id="updateInstallOrderPrivate" parameterType="String">
+		update install_order
+		set order_state=4,
+		install_man_id=#{install_man_id}
+		where install_order_id=#{install_order_id}
+	</update>
+	
+	<select id="selectInstallOrder7" parameterType="String" resultType="Map">
+		select *
+		from install_order
+		inner join install
+		on install_order.install_id=install.install_id
+		inner join user
+		on user.au_id=install_order.au_id
+		where install_order.order_state=7
+		and install_man_id=#{install_man_id}
+	</select>
+	
+	<select id="findEmployeeInstallOrder" parameterType="String" resultType="Map">
+		select *
+		from install_order
+		inner join install
+		on install.install_id=install_order.install_id
+		where install_order.install_man_id=#{install_man_id}
+	</select>
+	
+	<select id="findInstallEvaByInstallOrderId" parameterType="String" resultType="Map">
+		select *
+		from install_evaluate
+		inner join user
+		on user.au_id=install_evaluate.au_id
+		where install_order_id=#{install_order_id}
+	</select>
+	
+	<select id="selectInstallByInstallId" parameterType="String" resultType="Map">
+		select *
+		from install
+		where install_id=#{install_id}
+	</select>
+	
+	<delete id="deleteInstallByInstallId" parameterType="String">
+		delete 
+		from install
+		where install_id=#{install_id} 
+	</delete>
+	
+</mapper>

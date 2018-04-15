@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimum-scale=1.0,maximum-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="../css/air.css" />
+		<title>购物车</title>
+		<style type="text/css">
+			.orderCon .orderBox .orderInfo>article {
+				vertical-align: middle;
+			}
+			
+			.orderCon .orderBox .orderInfo>img {
+				margin: 1rem 0;
+			}
+			
+			.footer>.twoBtns {
+				width: 30%;
+			}
+			
+			.footer>.twoBtns>input {
+				font-size: 1.5rem;
+			}
+			
+			.footer>font:nth-child(2) {
+				display: inline-block;
+				width: 50%;
+				text-align: center;
+			}
+			
+			.footer>span:first-child {
+				margin: 2%;
+			}
+		</style>
+	</head>
+
+	<body class="bgcGray">
+		<header class="header">
+			<a href="javascript:history.back()"><img src="../img/icon_back@2x.png" /></a>
+			<center>购物车(<i id="cartNum"></i>)</center>
+		</header>
+		<div class="orderCon">
+			<section class="orderBox">
+				<!--<div class="orderInfo bB0 bT0">
+					<input type="checkbox" />
+					<img src="img/img_home_bytc@2x.png" alt="商品图片" />
+					<article>
+						<h4>标题啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</h4>
+						<small>XX款</small>
+						<p>
+							<font class="redFont">￥50000</font>
+							<i class="fr greenFont">X1</i>
+						</p>
+					</article>
+				</div>-->
+			</section>
+		</div>
+		<footer class="footer footerH4 clearfix">
+			<span>
+				<input type="checkbox" id="checkAll"/>
+				<label for="checkAll">全选</label>
+			</span>
+			<font>合计：<i class="redFont">￥5000</i></font>
+			<aside class="twoBtns">
+				<input type="button" value="结算" id="settlement" />
+				<input type="submit" value="删除" id="delete" />
+			</aside>
+		</footer>
+		<script type="text/javascript" src="../js/jquery.js" charset="utf-8"></script>
+		<script type="text/javascript">
+			const URL2 = 'http://www.kongtiaoguanjia.com/air/CommodityOrderController/selectCommodityOrderByOpenId.do';
+
+			function getJson2() { /*获取数据*/
+				$.ajax({
+					type: "post",
+					url: URL2,
+					async: false,
+					dataType: "json",
+					data: {
+						'openId': 222
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						var str = '';
+						for(var i = 0, item; item = data.data.commodity[i++];) {
+							console.log(item);
+							str += `
+							<div class="orderInfo bB0 bT0" id="${item.com_id}">
+								<input type="checkbox" />
+								<img src="http://www.kongtiaoguanjia.com/${item.cover_picture}" alt="商品图片" />
+								<article>
+									<h4>${item.c_name}</h4>
+									<small>XX款</small>
+									<p>
+										<font class="redFont">￥${item.price}</font>
+										<i class="fr greenFont">X1</i>
+									</p>
+								</article>
+							</div>
+							`;
+						}
+						$('.orderCon section').html(str);
+					},
+					error: function() {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+			}
+			getJson2();
+			$("#cartNum").html($(".orderInfo").length);
+
+			var checkedCIdArr = [];
+
+			function checked() {
+				checkedCIdArr = [];
+				$(":checked").each(function() {
+					var checkedCId = $(this).parent().attr("id");
+					checkedCIdArr.push(checkedCId);
+				})
+				return checkedCIdArr;
+			}
+
+			$("#delete").click(function() { /*删除*/
+				checked();
+				console.log(checkedCIdArr);
+				for(var i of checkedCIdArr) {
+					const URL3 = 'http://www.kongtiaoguanjia.com/air/CommodityOrderController/deleteCommodityOrderByComId.do';
+					$.ajax({
+						type: "get",
+						url: URL3,
+						async: false,
+						dataType: "text",
+						data: {
+							'comId': i
+						},
+						success: function(data) {
+							console.log("Request successful!");
+
+						},
+						error: function(msg) {
+							alert("哎呀网络开小差了，稍等会吧！");
+							console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+						}
+					});
+				}
+				getJson2();
+			})
+
+			$("#settlement").click(function() { /*结算*/
+				checked();
+				console.log(checkedCIdArr);
+				var checkedCIdStr = checkedCIdArr[0].toString();
+				$.ajax({
+					type: "get",
+					url: 'http://www.kongtiaoguanjia.com/air/commodity/updateCommodityOrderOrderState.do',
+					async: false,
+					dataType: "text",
+					data: {
+						'com_id': checkedCIdStr
+					},
+					success: function(data) {
+						console.log("Request successful!");
+						console.log(data);
+						window.location.href = '../targetGongZhongHao/cartConfirmOrder.do?' + checkedCIdStr;
+					},
+					error: function(msg) {
+						alert("哎呀网络开小差了，稍等会吧！");
+						console.log("网络请求异常: 错误信息-----> " + JSON.stringify(msg));
+					}
+				});
+
+				function setCookie(name, value, time) { /*存入cookie*/
+					var strsec = getsec(time);
+					var exp = new Date();
+					exp.setTime(exp.getTime() + strsec * 1);
+					document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+				}
+
+				function getsec(str) {
+					console.log(str);
+					var str1 = str.substring(1, str.length) * 1;
+					var str2 = str.substring(0, 1);
+					if(str2 == "s") {
+						return str1 * 1000;
+					} else if(str2 == "h") {
+						return str1 * 60 * 60 * 1000;
+					} else if(str2 == "d") {
+						return str1 * 24 * 60 * 60 * 1000;
+					}
+				}
+				setCookie("checkedCIdStr", checkedCIdStr, "s6000");
+			})
+
+			var check = document.getElementsByTagName("input"),
+				checkLen = check.length,
+				checkAll = document.getElementById("checkAll");
+			checkAll.onclick = function() { /*全选*/
+				if(this.checked == true) {
+					if(checkLen) {
+						for(var i = 0; i < checkLen; i++)
+							check[i].checked = true;
+					}
+				} else {
+					if(checkLen) {
+						for(var i = 0; i < checkLen; i++)
+							check[i].checked = false;
+					}
+				}
+			}
+		</script>
+	</body>
+
+</html>

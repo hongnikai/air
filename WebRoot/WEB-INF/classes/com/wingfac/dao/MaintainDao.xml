@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.MaintainDao">
+	
+	<select id="selectMaintainByauId" parameterType="String" resultType="com.wingfac.entity.MaintainOrder">
+		select *
+		from maintain_order
+		where au_id = #{au_id}
+	</select>
+		
+	<insert id="addMaintain" parameterType="Map">
+		insert into 
+		maintain
+		(maintain_id,brand,purpose,type,level)
+		value
+		(#{maintain_id},#{brand},#{purpose},#{type},#{level})
+	</insert>	
+	
+	<select id="selectMaintainByMaintainId" parameterType="String" resultType="Map">
+		select * 
+		from maintain
+		where maintain_id = #{maintain_id}
+	</select>
+	
+	<insert id="addMaintainOrder" parameterType="Map">
+		insert into
+		maintain_order
+		(maintain_order_id,maintain_id,au_id,
+		time,person,tellphone,address,total_price,
+		deposit,retainage,time_stage,create_time)
+		value
+		(#{maintain_order_id},#{maintain_id},#{au_id},
+		#{time},#{person},#{tellphone},#{address},#{total_price},
+		#{deposit},#{retainage},#{time_stage},#{create_time})
+	</insert>
+	
+	<select id="selectMaintainOrderByMaintain_id" parameterType="String" resultType="com.wingfac.entity.MaintainOrder">
+		select * 
+		from maintain_order
+		where maintain_id=#{maintain_id}
+	</select>
+	
+	<select id="selectMaintainOrderNotBuy" resultType="com.wingfac.entity.MaintainOrder">
+		select *
+		from maintain_order
+		where order_state=0
+	</select>
+	
+	<select id="selectMaintainOrderByUserId" parameterType="Map" resultType="Map">
+		select *
+		from maintain_order 
+		inner join user 
+ 		on user.au_id=maintain_order.au_id
+ 		inner join maintain
+ 		on maintain.maintain_id=maintain_order.maintain_id
+		where user.au_id=#{au_id}
+		limit #{page},5
+	</select>
+	
+	<select id="selectCountMaintainOrderByUserId" parameterType="String" resultType="int">
+		select count(*)
+		from maintain_order 
+		inner join user 
+ 		on user.au_id=maintain_order.au_id
+ 		inner join maintain
+ 		on maintain.maintain_id=maintain_order.maintain_id
+		where user.au_id=#{au_id}
+	</select>
+	
+	<delete id="deleteMaintainByMaintainId" parameterType="String">
+		delete 
+		from maintain
+		where maintain_id=#{maintain_id}
+	</delete>
+	
+	
+	<sql id="maintain_order_key">
+		<trim suffixOverrides=",">
+			<if test="maintain_order_id != null">maintain_order_id,</if>
+			<if test="maintain_id != null">maintain_id,</if>
+			<if test="au_id != null">au_id,</if>
+			<if test="time != null">time,</if>
+			<if test="person != null">person,</if>
+			<if test="tellphone != null">tellphone,</if>
+			<if test="address != null">address,</if>
+			<if test="total_price != null">total_price,</if>
+			<if test="deposit != null">deposit,</if>
+			<if test="retainage != null">retainage,</if>
+			<if test="time_stage != null">time_stage,</if>
+			<if test="create_time != null">create_time,</if>
+			<if test="order_state != null">order_state,</if>
+			<if test="maintain_man_id != null">maintain_man_id,</if>
+			<if test="go_indoor_picture != null">go_indoor_picture,</if>
+			<if test="yali_dianliu_weixiu != null">yali_dianliu_weixiu,</if>
+			<if test="clean_before != null">clean_before,</if>
+			<if test="clean_ing != null">clean_ing,</if>
+			<if test="clean_after != null">clean_after,</if>
+			<if test="complet_opinion != null">complet_opinion,</if>
+		</trim>
+	</sql>
+	
+	<sql id="maintain_order_value">
+		<trim suffixOverrides=",">
+			<if test="maintain_order_id != null">#{maintain_order_id},</if>
+			<if test="maintain_id != null">#{maintain_id},</if>
+			<if test="au_id != null">#{au_id},</if>
+			<if test="time != null">#{time},</if>
+			<if test="person != null">#{person},</if>
+			<if test="tellphone != null">#{tellphone},</if>
+			<if test="address != null">#{address},</if>
+			<if test="total_price != null">#{total_price},</if>
+			<if test="deposit != null">#{deposit},</if>
+			<if test="retainage != null">#{retainage},</if>
+			<if test="time_stage != null">#{time_stage},</if>
+			<if test="create_time != null">#{create_time},</if>
+			<if test="order_state != null">#{order_state},</if>
+			<if test="maintain_man_id != null">#{maintain_man_id},</if>
+			<if test="go_indoor_picture != null">#{go_indoor_picture},</if>
+			<if test="yali_dianliu_weixiu != null">#{yali_dianliu_weixiu},</if>
+			<if test="clean_before != null">#{clean_before},</if>
+			<if test="clean_ing != null">#{clean_ing},</if>
+			<if test="clean_after != null">#{clean_after},</if>
+			<if test="complet_opinion != null">#{complet_opinion},</if>
+		</trim>
+	</sql>
+	
+	<insert id="createMaintainOrder" parameterType="Map">
+		insert into maintain_order(<include refid="maintain_order_key"/>) values(<include refid="maintain_order_value"/>)
+	</insert>
+	
+	<select id="getMaintainOrderByMaintainOrderId" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		where maintain_order_id=#{maintain_order_id}
+	</select>
+	
+	<select id="selectAllMyMaintainOrders" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain_order.maintain_id=maintain.maintain_id
+		inner join user
+		on user.au_id=maintain_order.au_id
+		where maintain_order.au_id=#{au_id}
+	</select>
+	
+	<select id="selectAllMyMaintainOrder_state0" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain_order.maintain_id=maintain.maintain_id
+		inner join user
+		on user.au_id=maintain_order.au_id
+		where maintain_order.au_id=#{au_id}
+		and order_state=0
+	</select>
+	
+	<select id="selectAllMyMaintainOrder_state1" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain_order.maintain_id=maintain.maintain_id
+		inner join user
+		on user.au_id=maintain_order.au_id
+		where maintain_order.au_id=#{au_id}
+		and order_state=1	
+	</select>
+	
+	<update id="updateMaintainOrderState1" parameterType="String">
+		update maintain_order
+		set order_state=1
+		where maintain_order_id=#{maintain_order_id}
+	</update>
+	
+	<select id="selectMaintainOrderPay" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain.maintain_id=maintain_order.maintain_id
+		inner join user
+		on user.au_id=maintain_order.au_id
+		where maintain_order.order_state=1
+		and maintain_order.maintain_man_id='0'
+	</select>
+	
+	<select id="selectMaintainOrderState5" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain.maintain_id=maintain_order.maintain_id
+		inner join user
+		on user.au_id=maintain_order.au_id
+		where maintain_order.order_state=5
+		and maintain_order.maintain_man_id=#{maintain_man_id}
+	</select>
+	
+	<update id="updateMaintainOrderPrivate" parameterType="String">
+		update maintain_order
+		set order_state=5,
+		maintain_man_id=#{maintain_man_id}
+		where maintain_order_id=#{maintain_order_id}
+	</update>
+	
+	<select id="selectMaintainOrderState7" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain.maintain_id=maintain_order.maintain_id
+		inner join user
+		on user.au_id=maintain_order.au_id
+		where maintain_order.order_state=7
+		and maintain_order.maintain_man_id=#{maintain_man_id}
+	</select>
+	
+	<select id="findEmployeeMaintainOrder" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		inner join maintain
+		on maintain.maintain_id=maintain_order.maintain_id
+		where maintain_order.maintain_man_id=#{maintain_man_id}
+	</select>
+	
+	<select id="findMaintainEvaByMaintainOrderId" parameterType="String" resultType="Map">
+		select *
+		from maintain_evalute
+		inner join user
+		on user.au_id=maintain_evalute.au_id
+		where maintain_order_id=#{maintain_order_id}
+	</select>
+	
+	<select id="selectMaintainOrderById" parameterType="String" resultType="Map">
+		select *
+		from maintain_order
+		where maintain_order_id=#{maintain_order_id}
+	</select>
+	
+	<delete id="deleteMaintainOrderById" parameterType="String">
+		delete 
+		from maintain_order
+		where maintain_order_id=#{maintain_order_id}
+	</delete>
+</mapper>

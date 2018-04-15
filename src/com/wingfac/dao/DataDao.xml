@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.DataDao">
+	<select id="findBanners" resultType="Map">
+		select sys_banner,sys_case_banner,sys_demand_banner 
+		from sys_data 
+		limit 0,1
+	</select>
+	
+	<select id="findSysBanner" resultType="String">
+		select shop_banner
+		from sys_data
+		limit 0,1
+	</select>
+	
+	<update id="updateSysBanner" parameterType="String">
+		update sys_data 
+		set shop_banner=#{shop_banner}	
+	</update>
+	
+	<select id="findSysCaseBanner" resultType="String">
+		select sys_case_banner 
+		from sys_data
+		limit 0,1
+	</select>
+	
+	<update id="updateSysCaseBanner" parameterType="String">
+		update sys_data 
+		set sys_case_banner=#{sys_case_banner}	
+	</update>
+	
+	<select id="findSysDemandBanner" resultType="String">
+		select sys_demand_banner
+		from sys_data
+		limit 0,1
+	</select>
+	
+	<update id="updateSysDemandBanner" parameterType="String">
+		update sys_data 
+		set sys_demand_banner=#{sys_demand_banner}	
+	</update>
+	
+	<!-- 查询商品的提问和回答数量 -->
+	<select id="selectAskInnerJoinUserBycId" parameterType="String" resultType="Map">
+		select
+		(select count(*)
+		from ask_all_answers
+		where ask_all_answers.ask_id=ask_all.ask_id) num,
+		ask_all.question,
+		ask_all.au_id,
+		ask_all.create_time,
+		ask_all.ask_id,
+		ask_all.c_id
+		from ask_all
+		inner join user
+		on user.au_id=ask_all.au_id
+		where c_id=#{c_id}
+	</select>
+	
+	<sql id="ask_all_key">
+		<trim suffixOverrides=",">
+			<if test="ask_id != null">ask_id,</if>
+			<if test="c_id != null">c_id,</if>
+			<if test="au_id != null">au_id,</if>
+			<if test="question != null">question,</if>
+			<if test="create_time != null">create_time,</if>
+		</trim>
+	</sql>
+	
+	<sql id="ask_all_value">
+		<trim suffixOverrides=",">
+		 	<if test="ask_id != null">#{ask_id},</if>
+			<if test="c_id != null">#{c_id},</if>
+			<if test="au_id != null">#{au_id},</if>
+			<if test="question != null">#{question},</if>
+			<if test="create_time != null">#{create_time},</if>
+		</trim>
+	</sql>
+	
+	<insert id="createCommodityAsk" parameterType="Map">
+		insert into ask_all(<include refid="ask_all_key"/>) values(<include refid="ask_all_value"/>)
+	</insert>
+	
+</mapper>

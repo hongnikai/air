@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wingfac.dao.RepairDao">
+	
+	<select id="selectRepairByauId" parameterType="String" resultType="com.wingfac.entity.RepairOrder">
+		select *
+		from repair_order 
+		where au_id=#{au_id}
+	</select>
+	
+	<insert id="addRepair" parameterType="Map">
+		insert into
+		repair
+		(repair_id,brand,type,purpose,level,explains)
+		value
+		(#{repair_id},#{brand},#{type},#{purpose},#{level},#{explain})
+	</insert>
+	
+ 	<select id="selectRepairByRepairId" parameterType="String" resultType="com.wingfac.entity.Repair">
+		select *
+		from repair
+		where 
+		repair_id = #{repair_id}
+	</select>
+		
+	<insert id="createRepairOrder" parameterType="Map">
+		insert into
+		repair_order
+		(repair_order_id,repair_id,au_id,time,
+		person,tellphone,address,total_price,
+		deposit,retainage,time_stage,create_time)
+		value
+		(#{repair_order_id},#{repair_id},#{au_id},#{time},
+		#{person},#{tellphone},#{address},#{total_price},
+		#{deposit},#{retainage},#{time_stage},#{create_time})
+	</insert>	
+			
+	<select id="selectRepairOrderByRepairId" parameterType="String" resultType="com.wingfac.entity.RepairOrder">
+		select * 
+		from repair_order
+		where repair_id = #{repair_id}
+	</select>		
+		
+	<select id="selectAllRepairOrderNotBuy" resultType="com.wingfac.entity.RepairOrder">
+		select *
+		from repair_order
+		where order_state=0
+	</select>
+	
+	<select id="selectRepairOrderByUserId" parameterType="Map" resultType="Map">
+		select *
+		from repair_order
+		inner join user
+		on user.au_id=repair_order.au_id
+		inner join repair
+		on repair.repair_id=repair_order.repair_id
+		where user.au_id=#{au_id}
+		LIMIT #{page},10
+	</select>	
+	
+	<select id="selectCountRepairOrderByUserId" parameterType="String" resultType="int">
+		select count(*)
+		from repair_order
+		inner join user
+		on user.au_id=repair_order.au_id
+		inner join repair
+		on repair.repair_id=repair_order.repair_id
+		where user.au_id=#{au_id}
+	</select>
+		
+		<sql id="repair_key">
+		<trim suffixOverrides=",">
+			<if test="repair_id != null">
+			 repair_id,
+			</if>
+			<if test="brand != null">
+			brand,
+			</if>
+			<if test="type != null">
+			type,			
+			</if>
+			<if test="purpose != null">
+			purpose,			
+			</if>
+			<if test="level != null">
+			level,			
+			</if>
+			<if test="explains != null">
+			explains,
+			</if>
+		</trim>
+	</sql>
+	
+	<sql id="repair_value">
+		<trim suffixOverrides=",">
+			<if test="repair_id != null">
+			#{repair_id},
+			</if>
+			<if test="brand != null">
+			#{brand},
+			</if>
+			<if test="type != null">
+			#{type},
+			</if>
+			<if test="purpose != null">
+			#{purpose},
+			</if>
+			<if test="level != null">
+			#{level},
+			</if>
+			<if test="explains != null">
+			#{explains},
+			</if>
+		</trim>
+	</sql>
+	
+	<insert id="createRepair" parameterType="Map">
+		insert into repair (<include refid="repair_key"/>) values(<include refid="repair_value"/>)
+	</insert>
+		
+	<sql id="repair_order_key">
+		<trim suffixOverrides=",">
+			<if test="repair_order_id != null">repair_order_id,</if>
+			<if test="repair_id != null">repair_id,</if>
+			<if test="au_id != null">au_id,</if>
+			<if test="time != null">time,</if>
+			<if test="person != null">person,</if>
+			<if test="tellphone != null">tellphone,</if>
+			<if test="address != null">address,</if>
+			<if test="total_price != null">total_price,</if>
+			<if test="deposit != null">deposit,</if>
+			<if test="retainage != null">retainage,</if>
+			<if test="time_stage != null">time_stage,</if>
+			<if test="create_time != null">create_time,</if>
+			<if test="order_state != null">order_state,</if>
+			<if test="repair_man_id != null">repair_man_id,</if>
+			<if test="go_indoor_picture != null">go_indoor_picture,</if>
+			<if test="jiqi_jiance_picture != null">jiqi_jiance_picture,</if>
+			<if test="change_part_picture != null">change_part_picture,</if>
+			<if test="repair_detail != null">repair_detail,</if>
+			<if test="repair_price != null">repair_price,</if>
+			<if test="complet_opinion != null">complet_opinion,</if>
+		</trim>
+	</sql>
+
+	<sql id="repair_order_value">
+		<trim suffixOverrides=",">
+			<if test="repair_order_id != null">#{repair_order_id},</if>
+			<if test="repair_id != null">#{repair_id},</if>
+			<if test="au_id != null">#{au_id},</if>
+			<if test="time != null">#{time},</if>
+			<if test="person != null">#{person},</if>
+			<if test="tellphone != null">#{tellphone},</if>
+			<if test="address != null">#{address},</if>
+			<if test="total_price != null">#{total_price},</if>
+			<if test="deposit != null">#{deposit},</if>
+			<if test="retainage != null">#{retainage},</if>
+			<if test="time_stage != null">#{time_stage},</if>
+			<if test="create_time != null">#{create_time},</if>
+			<if test="order_state != null">#{order_state},</if>
+			<if test="repair_man_id != null">#{repair_man_id},</if>
+			<if test="go_indoor_picture != null">#{go_indoor_picture},</if>
+			<if test="jiqi_jiance_picture != null">#{jiqi_jiance_picture},</if>
+			<if test="change_part_picture != null">#{change_part_picture},</if>
+			<if test="repair_detail != null">#{repair_detail},</if>
+			<if test="repair_price != null">#{repair_price},</if>
+			<if test="complet_opinion != null">#{complet_opinion},</if>
+		</trim>	
+	</sql>
+		
+	<insert id="insertRepairOrder" parameterType="Map">
+		insert into repair_order (<include refid="repair_order_key"/>) values(<include refid="repair_order_value"/>)		
+	</insert>	
+		
+	<select id="getRepairOrderByRepairOrderId" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		where repair_order_id=#{repair_order_id}
+	</select>	
+		
+	<select id="selectAllMyRepairOrders" resultType="Map" parameterType="String"> 
+		select *
+		from repair_order
+		inner join repair
+		on repair_order.repair_id=repair.repair_id
+		inner join user
+		on user.au_id=repair_order.au_id
+		where repair_order.au_id=#{au_id}
+	</select>	
+		
+	<select id="selectAllMyRepairOrder_state0" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		inner join repair
+		on repair_order.repair_id=repair.repair_id
+		inner join user
+		on user.au_id=repair_order.au_id
+		where repair_order.au_id=#{au_id}
+		and order_state=0
+	</select>
+	
+	<select id="selectAllMyRepairOrder_state1" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		inner join repair
+		on repair_order.repair_id=repair.repair_id
+		inner join user
+		on user.au_id=repair_order.au_id
+		where repair_order.au_id=#{au_id}
+		and order_state=1
+	</select>	
+	
+	<update id="updateRepairOrderState1" parameterType="String">
+		update repair_order
+		set order_state=1
+		where repair_order_state=#{repair_order_id}
+	</update>
+	
+	<select id="selectRepairOrderPay" resultType="Map">
+		select *
+		from repair_order
+		inner join repair
+		on repair.repair_id=repair_order.repair_id
+		inner join user
+		on user.au_id=repair_order.au_id
+		where repair_order.order_state=0
+		and repair_order.repair_man_id='0'
+	</select>
+	
+	<select id="selectRepairOrderState6" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		inner join repair
+		on repair.repair_id=repair_order.repair_id
+		inner join user
+		on user.au_id=repair_order.au_id
+		where repair_order.order_state=6
+		and repair_order.repair_man_id=#{repair_man_id}
+	</select>
+	
+	<update id="updateRepairOrderPrivate" parameterType="String">
+		update repair_order
+		set order_state=6,
+		repair_man_id=#{repair_man_id}
+		where repair_order_id=#{repair_order_id}
+	</update>
+	
+	<select id="selectRepairOrderState7" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		inner join repair
+		on repair.repair_id=repair_order.repair_id
+		inner join user
+		on user.au_id=repair_order.au_id
+		where repair_order.order_state=7
+		and repair_order.repair_man_id=#{repair_man_id}
+	</select>
+	
+	<select id="findEmployeeRepairOrder" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		inner join repair
+		on repair.repair_id=repair_order.repair_id
+		where repair_order.repair_man_id=#{repair_man_id}
+	</select>
+	
+	<select id="findRepairEvaDetail" parameterType="String" resultType="Map"> 
+		select *
+		from repair_evalute
+		inner join user
+		on user.au_id=repair_evalute.au_id
+		where repair_evalute.repair_order_id=#{repair_order_id}
+	</select>
+	
+	<delete id="deleteRepairByRepairId" parameterType="String">
+		delete 
+		from repair
+		where repair_id=#{repair_id} 
+	</delete>
+	
+	<select id="selectReapirOrderById" parameterType="String" resultType="Map">
+		select *
+		from repair_order
+		where repair_order_id=#{repair_order_id}
+	</select>
+	
+	<delete id="deleteRepairOrderById" parameterType="String">
+		delete 
+		from repair_order
+		where repair_order_id=#{repair_order_id}
+	</delete>
+	
+	
+	
+</mapper>

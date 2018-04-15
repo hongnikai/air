@@ -1,0 +1,149 @@
+@charset "utf-8";
+/* CSS Document */
+/*登录页*/
+.login-wrap
+{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin:auto;
+	width: 400px;
+	height: 360px;
+} 
+.login-wrap img{
+	width: 400px;
+	height: 150px;
+}
+.login-wrap font{
+	font-size: 48px;
+	color: white;
+}
+.login-wrap h2
+{
+	text-align: center;
+	color: #b26701;
+	font-size: 28px;
+	margin-bottom: 20px;
+	font-weight: bold;
+}
+.login-wrap .login-type{
+	margin-top:35px;
+}
+.login-wrap select{
+	height: 25px;
+}
+	.login
+	{
+		background: #fff;
+		padding: 30px 0;
+	}
+	.login div
+	{	
+		width: 320px;
+		height: 40px;
+		line-height: 40px;
+		margin: auto;
+		top: 20px;
+	}
+	.username-wrap
+	{
+		padding-bottom: 20px;
+	}
+	.username-wrap img
+	{
+		width: 40px;
+		height: 40px;
+	}
+	.username
+	{
+		width: 250px;
+		line-height: 40px;
+		height: 40px;
+		background: #eee;
+		float: right;
+		padding: 0 10px;
+		color: #b26701;
+	}
+	.login-wrap input:-ms-input-placeholder,.login-wrap input:-moz-placeholder,.login-wrap input:-webkit-input-placeholder{
+		color:#ffbb02 ;
+		opacity: 1;
+	}
+	.password-wrap img
+	{
+		width: 40px;
+		height: 40px;
+	}
+	.password
+	{
+		width: 250px;
+		height: 40px;
+		line-height: 40px;
+		background: #eee;
+		float: right;
+		padding: 0 10px;
+		color: #b26701;
+	}
+	.login button
+	{
+		width: 320px;
+		height: 36px;
+		background: #50bd65;
+		display: block;
+		margin: 25px auto;
+		color:#fff;
+	}
+	.login div.floatr
+	{
+		padding: 10px 0;
+		height: 20px !important;
+		text-align: right; 
+		margin-right: 40px;
+		overflow: hidden;
+	}
+	.rember
+	{
+		float: right;
+		width: 90px !important;
+		height: 20px !important;
+		line-height: 20px !important;
+		padding-bottom: 4px !important;
+	}
+	.rember em
+	{
+		width: 16px;
+		height: 16px;
+		line-height: 15px;
+		text-align: center;
+		display:block;
+		float: left;
+		margin-top: 4px;
+		background: url(../img/remmer.png) no-repeat center center;
+	}
+	.rember em img
+	{
+		display: none;
+	}
+#chkRememberPass{ position: absolute; width: 20px; height:20px; right: 10px; opacity: 0;}
+.yy2{ position:absolute; top:0; display:none; z-index:2;background:rgba(143,107,86,0.1); color:#333; text-align:center; width:100%; height:100%;  margin:auto; left:0; right:0;}
+.tishi{width:315px; background:#fff; color:#333; text-align:center; padding-bottom:20px; margin:15% auto 0;}
+.failed{ border-bottom:1px #999 solid; line-height:50px; text-align:center; font-size:20px;}
+.tishi h2{ color:#333; line-height:120px; font-size:18px;}
+.tishi button{ line-height:40px; width:280px; background:#b26701; color:#fff;font-size:17px;}
+.error{margin:auto;width:352px; color:#ec6941;font-size: 16px; font-weight: bold; padding: 5px 0;}
+/*.rember em input
+	{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+        z-index: 3;
+	}*/
+	.rember .floatr
+	{
+		color: #ffbb02;
+	}
